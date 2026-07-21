@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  background: #f2f9fc;
+}
+
+body {
+  font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  color: #0e2a3a;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.tap {
+  transition: transform 0.12s ease, opacity 0.12s ease;
+}
+.tap:active {
+  transform: scale(0.96);
+  opacity: 0.85;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-up {
+  animation: fadeUp 0.28s ease both;
+}
+
+.input {
+  width: 100%;
+  border-radius: 0.75rem;
+  background: #f2f9fc;
+  border: 1px solid #d6e6ee;
+  padding: 0.65rem 0.85rem;
+  font-size: 13px;
+  color: #0e2a3a;
+  outline: none;
+}
+.input:focus {
+  border-color: #3e9bc1;
+  background: #ffffff;
+}
+.input::placeholder {
+  color: #9db7c4;
+}
