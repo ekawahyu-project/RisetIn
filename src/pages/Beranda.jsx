@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, FlaskConical, Users2, Eye, CheckCircle2, Sparkles, UploadCloud } from "lucide-react";
+import { ChevronRight, FlaskConical, Users2, Eye, CheckCircle2, Sparkles, UploadCloud, BookOpen } from "lucide-react";
 import { useApp } from "../context/AppContext";
 import { RisetCardGrid } from "../components/RisetCard";
 import Container from "../components/Container";
@@ -48,7 +48,7 @@ export default function Beranda() {
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <StatCard icon={FlaskConical} label="Kebutuhan Aktif" value={user.stats.kebutuhan} onClick={() => navigate("/kolaborasi")} delay={0} />
           <StatCard icon={Users2} label="Kolaborasi" value={user.stats.kolaborasi} onClick={() => navigate("/kolaborasi")} delay={40} />
-          <StatCard icon={Eye} label="Riset Dilihat" value={user.stats.dilihat} onClick={() => navigate("/riset")} delay={80} />
+          <StatCard icon={BookOpen} label="Total Riset" value={riset.filter(r => r.status === "diterbitkan").length} onClick={() => navigate("/riset")} delay={80} />
           <StatCard icon={CheckCircle2} label="Diadopsi" value={user.stats.diadopsi} delay={120} />
         </div>
 
@@ -106,7 +106,7 @@ export default function Beranda() {
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-bold text-ink dark:text-white">Riset terbaru</h2>
           <button
-            onClick={() => navigate("/riset-saya")}
+            onClick={() => navigate("/riset")}
             className="tap flex items-center text-[12.5px] font-semibold text-brand-600 dark:text-brand-300"
           >
             Lihat semua <ChevronRight size={15} />
