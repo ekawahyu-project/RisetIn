@@ -20,9 +20,21 @@ function getInitialTheme() {
   return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
+// Baca sesi yang tersimpan dari localStorage
+function getInitialAuth() {
+  try {
+    const authed = window.localStorage.getItem("risetin-authed") === "true";
+    const role = window.localStorage.getItem("risetin-role") || "mahasiswa";
+    return { authed, role };
+  } catch {
+    return { authed: false, role: "mahasiswa" };
+  }
+}
+
 export function AppProvider({ children }) {
-  const [authed, setAuthed] = useState(false);
-  const [role, setRole] = useState("mahasiswa"); // "mahasiswa" | "industri"
+  const initialAuth = getInitialAuth();
+  const [authed, setAuthed] = useState(initialAuth.authed);
+  const [role, setRole] = useState(initialAuth.role);
   const [theme, setTheme] = useState(getInitialTheme);
 
   const [riset, setRiset] = useState(() =>
@@ -58,13 +70,20 @@ export function AppProvider({ children }) {
 
   const login = ({ email }) => {
     const isIndustri = /industri/i.test(email || "");
-    setRole(isIndustri ? "industri" : "mahasiswa");
+    const newRole = isIndustri ? "industri" : "mahasiswa";
+    setRole(newRole);
     setAuthed(true);
+    // Simpan sesi ke localStorage agar tidak hilang saat refresh
+    window.localStorage.setItem("risetin-authed", "true");
+    window.localStorage.setItem("risetin-role", newRole);
     showToast(isIndustri ? "Berhasil masuk sebagai Industri" : "Berhasil masuk sebagai Mahasiswa");
   };
 
   const logout = () => {
     setAuthed(false);
+    // Hapus sesi dari localStorage
+    window.localStorage.removeItem("risetin-authed");
+    window.localStorage.removeItem("risetin-role");
     showToast("Anda telah keluar");
   };
 

@@ -153,13 +153,15 @@ function KolaborasiIndustri() {
                     <div className="mt-0.5 flex items-center gap-1 text-[12px] text-sub">
                       <Building2 size={12} /> {p.kampus}
                     </div>
-                    <CategoryBadge kategori={r.kategori} className="mt-1.5" />
+                    <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                      <CategoryBadge kategori={r.kategori} />
+                      {p.status === "menunggu" ? (
+                        <span className="rounded-full bg-gold/10 px-2 py-0.5 text-[10.5px] font-bold text-gold">Menunggu</span>
+                      ) : (
+                        <span className="rounded-full bg-berry/10 px-2 py-0.5 text-[10.5px] font-bold text-berry">Ditolak</span>
+                      )}
+                    </div>
                   </div>
-                  {p.status === "menunggu" ? (
-                    <span className="shrink-0 rounded-full bg-gold/10 px-2 py-1 text-[10.5px] font-bold text-gold">Menunggu</span>
-                  ) : (
-                    <span className="shrink-0 rounded-full bg-berry/10 px-2 py-1 text-[10.5px] font-bold text-berry">Ditolak</span>
-                  )}
                 </div>
               </div>
             );

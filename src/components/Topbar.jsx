@@ -91,7 +91,7 @@ export default function Topbar({ onMenuClick }) {
         </button>
 
         <div className="flex items-center gap-2 lg:hidden">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-500 to-brand-700 text-[13px] font-black text-white shadow-md shadow-brand-600/30">R</div>
+          <img src="/logo-risetin.png" alt="RisetIn" className="h-8 w-8 rounded-lg object-contain" />
           <span className="text-[14px] font-extrabold text-ink dark:text-white">RisetIn</span>
         </div>
 

@@ -76,7 +76,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-sky-50 dark:bg-[#0b1420]">
+    <div className="min-h-screen overflow-x-hidden bg-sky-50 dark:bg-[#0b1420]">
       <div className="mx-auto flex min-h-screen max-w-[1600px]">
         <div className="hidden shrink-0 lg:block lg:w-64">
           <div className="fixed h-screen w-64">
@@ -86,7 +86,7 @@ export default function App() {
 
         <MobileDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
 
-        <div className="flex min-h-screen flex-1 flex-col lg:min-w-0">
+        <div className="flex min-h-screen min-w-0 flex-1 flex-col overflow-x-hidden">
           <Topbar onMenuClick={() => setDrawerOpen(true)} />
           <main className="flex-1 pb-20 lg:pb-10">
             <div key={location.pathname} className="fade-in">
