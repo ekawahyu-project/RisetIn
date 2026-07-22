@@ -7,6 +7,7 @@ import BottomNav from "./components/BottomNav";
 import { useApp } from "./context/AppContext";
 
 import Login from "./pages/Login";
+import LandingPage from "./pages/LandingPage";
 import Beranda from "./pages/Beranda";
 import RisetSaya from "./pages/RisetSaya";
 import Notifikasi from "./pages/Notifikasi";
@@ -68,7 +69,7 @@ export default function App() {
   if (!authed) {
     return (
       <>
-        <Login />
+        <LandingPage />
         <Toast />
       </>
     );

@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 
 const gradients = {
-  pertanian: ["#2F9E6E", "#8FCB9E"],
-  teknologi: ["#146385", "#3E9BC1"],
-  manufaktur: ["#C97B3D", "#E8B27A"],
-  kesehatan: ["#C4536B", "#E79AAC"],
-  lingkungan: ["#1C7DA3", "#7FC1DB"],
-  energi: ["#C79A2C", "#E9CE7F"],
+  pertanian: ["#1a7a52", "#34a06e"],
+  teknologi: ["#0f5f82", "#2a8aad"],
+  manufaktur: ["#9e5a24", "#c97b3d"],
+  kesehatan: ["#a03050", "#c4536b"],
+  lingkungan: ["#145f80", "#1c7da3"],
+  energi: ["#a07a20", "#c79a2c"],
 };
 
 const icons = {
@@ -72,7 +72,26 @@ const icons = {
   ),
 };
 
-export default function RisetThumb({ img, kategori, className = "" }) {
+export default function RisetThumb({ img, imgUrl, kategori, className = "" }) {
+  const [imgError, setImgError] = useState(false);
+
+  // If imgUrl provided and no error, render real image
+  if (imgUrl && !imgError) {
+    return (
+      <div className={`relative overflow-hidden ${className}`} style={{ borderRadius: "inherit" }}>
+        <img
+          src={imgUrl}
+          alt={kategori || "riset"}
+          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
+          onError={() => setImgError(true)}
+        />
+        {/* Subtle gradient overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+      </div>
+    );
+  }
+
+  // Fallback: SVG icon
   const [c1, c2] = gradients[kategori] || gradients.teknologi;
   const gid = `g-${img}-${kategori}`;
   return (
@@ -91,7 +110,7 @@ export default function RisetThumb({ img, kategori, className = "" }) {
         strokeWidth="1.1"
         strokeLinecap="round"
         strokeLinejoin="round"
-        opacity="0.95"
+        opacity="0.9"
       >
         {icons[img] || icons.lms}
       </g>

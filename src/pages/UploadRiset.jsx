@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UploadCloud, CheckCircle2, Sparkles, Trash2 } from "lucide-react";
+import { UploadCloud, CheckCircle2, Sparkles, Trash2, Image, X } from "lucide-react";
 import { useApp } from "../context/AppContext";
 import { categories } from "../data/mockData";
 import RisetThumb from "../components/RisetThumb";
@@ -20,12 +20,27 @@ export default function UploadRiset() {
     deskripsi: "",
     lisensi: "CC BY-SA",
     fileName: "",
+    // Image upload fields
+    imgFile: null,
+    imgPreviewUrl: null,
   });
   const [checking, setChecking] = useState(false);
   const [checked, setChecked] = useState(false);
   const [published, setPublished] = useState(false);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    setForm((f) => ({ ...f, imgFile: file, imgPreviewUrl: url }));
+  };
+
+  const removeImage = () => {
+    if (form.imgPreviewUrl) URL.revokeObjectURL(form.imgPreviewUrl);
+    setForm((f) => ({ ...f, imgFile: null, imgPreviewUrl: null }));
+  };
 
   const runCheck = () => {
     setChecking(true);
@@ -50,6 +65,7 @@ export default function UploadRiset() {
       tahap: form.tahap || "Gagasan murni",
       status: "diterbitkan",
       img: "lms",
+      imgUrl: form.imgPreviewUrl || null,
       ringkasan: form.deskripsi || "Belum ada deskripsi lengkap untuk riset ini.",
       manfaat: ["Manfaat akan dilengkapi peneliti"],
     });
@@ -66,7 +82,7 @@ export default function UploadRiset() {
           </div>
           <div>
             <p className="text-[15px] font-bold text-ink dark:text-white">Berhasil!</p>
-            <p className="mt-1 text-[13px] text-sub">Riset berhasil diterbitkan.</p>
+            <p className="mt-1 text-[13px] text-sub">Riset berhasil diterbitkan dan dapat ditemukan di Jelajahi Riset.</p>
           </div>
           <button
             onClick={() => navigate("/riset-saya")}
@@ -84,28 +100,37 @@ export default function UploadRiset() {
       <PageHeader title="Upload Riset" back subtitle="Bagikan riset Anda dan jangkau industri yang tepat" />
 
       <div className="mx-auto max-w-2xl">
+        {/* Step indicator */}
         <div className="flex items-center justify-center gap-2 rounded-2xl bg-white dark:bg-[#101f2e] p-4 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 sm:gap-3">
           {steps.map((s, i) => (
             <React.Fragment key={s}>
               <div className="flex flex-col items-center gap-1">
                 <div
-                  className={`flex h-8 w-8 items-center justify-center rounded-full text-[12.5px] font-bold ${
-                    i + 1 <= step ? "bg-brand-600 text-white" : "bg-sky-100 dark:bg-white/5 text-brand-400"
+                  className={`flex h-8 w-8 items-center justify-center rounded-full text-[12.5px] font-bold transition-all ${
+                    i + 1 < step
+                      ? "bg-leaf text-white"
+                      : i + 1 === step
+                      ? "bg-brand-600 text-white ring-4 ring-brand-600/20"
+                      : "bg-sky-100 dark:bg-white/5 text-brand-400"
                   }`}
                 >
-                  {i + 1}
+                  {i + 1 < step ? <CheckCircle2 size={14} /> : i + 1}
                 </div>
-                <span className={`text-[10.5px] font-medium ${i + 1 <= step ? "text-brand-700" : "text-sub"}`}>{s}</span>
+                <span className={`text-[10.5px] font-medium ${i + 1 <= step ? "text-brand-700 dark:text-brand-300" : "text-sub"}`}>{s}</span>
               </div>
-              {i < steps.length - 1 && <div className={`h-0.5 w-8 rounded sm:w-14 ${i + 1 < step ? "bg-brand-600" : "bg-sky-100 dark:bg-white/5"}`} />}
+              {i < steps.length - 1 && (
+                <div className={`h-0.5 w-8 rounded sm:w-14 transition-colors ${i + 1 < step ? "bg-brand-600" : "bg-sky-100 dark:bg-white/5"}`} />
+              )}
             </React.Fragment>
           ))}
         </div>
 
         <div className="mt-5 rounded-2xl bg-white dark:bg-[#101f2e] p-6 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 sm:p-8">
+          {/* ========== STEP 1: Informasi ========== */}
           {step === 1 && (
-            <div className="fade-up space-y-4">
-              <h2 className="text-[15px] font-bold text-ink dark:text-white">Informasi Riset</h2>
+            <div className="fade-up space-y-5">
+              <h2 className="text-[16px] font-bold text-ink dark:text-white">Informasi Riset</h2>
+
               <Field label="Judul Riset">
                 <input
                   value={form.judul}
@@ -114,14 +139,60 @@ export default function UploadRiset() {
                   className="input"
                 />
               </Field>
+
+              {/* Cover Image Upload */}
+              <Field label="Gambar Cover Riset">
+                {form.imgPreviewUrl ? (
+                  <div className="relative overflow-hidden rounded-xl">
+                    <img
+                      src={form.imgPreviewUrl}
+                      alt="Cover riset"
+                      className="h-44 w-full object-cover"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity hover:opacity-100">
+                      <button
+                        type="button"
+                        onClick={removeImage}
+                        className="tap flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-[12px] font-bold text-red-600 hover:bg-white"
+                      >
+                        <Trash2 size={13} /> Hapus Gambar
+                      </button>
+                    </div>
+                    {/* Remove button always visible */}
+                    <button
+                      type="button"
+                      onClick={removeImage}
+                      className="tap absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ) : (
+                  <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-brand-200 dark:border-white/10 bg-sky-50 dark:bg-white/5 py-8 text-center transition-colors hover:border-brand-400 hover:bg-sky-100 dark:hover:bg-white/8">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 dark:bg-white/10 text-brand-500">
+                      <Image size={22} />
+                    </div>
+                    <p className="text-[13px] font-semibold text-ink dark:text-white">Klik untuk upload gambar cover</p>
+                    <p className="text-[11.5px] text-sub">JPG, PNG, WebP — Maks. 5MB</p>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleImageUpload}
+                    />
+                  </label>
+                )}
+                <p className="mt-1.5 text-[11.5px] text-sub">
+                  Gambar cover membantu riset Anda tampil lebih menarik di Jelajahi Riset.
+                </p>
+              </Field>
+
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field label="Bidang Riset">
                   <select value={form.kategori} onChange={(e) => set("kategori", e.target.value)} className="input">
                     <option value="">Pilih bidang riset</option>
                     {categories.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.label}
-                      </option>
+                      <option key={c.id} value={c.id}>{c.label}</option>
                     ))}
                   </select>
                 </Field>
@@ -134,6 +205,7 @@ export default function UploadRiset() {
                   </select>
                 </Field>
               </div>
+
               <Field label="Deskripsi Singkat">
                 <textarea
                   value={form.deskripsi}
@@ -143,6 +215,7 @@ export default function UploadRiset() {
                   className="input resize-none"
                 />
               </Field>
+
               <Field label="Lisensi">
                 <select value={form.lisensi} onChange={(e) => set("lisensi", e.target.value)} className="input sm:max-w-xs">
                   <option>CC BY-SA</option>
@@ -153,10 +226,11 @@ export default function UploadRiset() {
             </div>
           )}
 
+          {/* ========== STEP 2: Dokumen ========== */}
           {step === 2 && (
             <div className="fade-up space-y-4">
               <h2 className="text-[15px] font-bold text-ink dark:text-white">Dokumen</h2>
-              <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-brand-200 bg-sky-50 dark:bg-white/5 py-12 text-center">
+              <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-brand-200 bg-sky-50 dark:bg-white/5 py-12 text-center transition-colors hover:border-brand-400">
                 <UploadCloud size={28} className="text-brand-400" />
                 <p className="text-[13px] font-semibold text-ink dark:text-white">Klik untuk mengunggah, atau seret file ke sini</p>
                 <p className="text-[11.5px] text-sub">Ukuran file maksimum 50MB</p>
@@ -184,6 +258,7 @@ export default function UploadRiset() {
             </div>
           )}
 
+          {/* ========== STEP 3: Pengecekan ========== */}
           {step === 3 && (
             <div className="fade-up space-y-4">
               <h2 className="text-[15px] font-bold text-ink dark:text-white">Pengecekan Otomatis</h2>
@@ -194,7 +269,7 @@ export default function UploadRiset() {
                 {!checking && !checked && (
                   <button
                     onClick={runCheck}
-                    className="tap flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 py-3 text-[13px] font-bold text-white"
+                    className="tap flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 py-3 text-[13px] font-bold text-white hover:bg-brand-700 transition-colors"
                   >
                     <Sparkles size={16} /> Jalankan Pengecekan AI
                   </button>
@@ -217,19 +292,36 @@ export default function UploadRiset() {
             </div>
           )}
 
+          {/* ========== STEP 4: Publikasi ========== */}
           {step === 4 && (
             <div className="fade-up space-y-4">
               <h2 className="text-[15px] font-bold text-ink dark:text-white">Pratinjau Publikasi</h2>
               <div className="rounded-2xl bg-sky-50 dark:bg-white/5 p-4">
-                <RisetThumb img="lms" kategori={form.kategori || "teknologi"} className="h-40 w-full rounded-xl" />
+                {/* Cover image preview */}
+                <div className="relative overflow-hidden rounded-xl" style={{ aspectRatio: "16/9" }}>
+                  {form.imgPreviewUrl ? (
+                    <img
+                      src={form.imgPreviewUrl}
+                      alt="Cover riset"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <RisetThumb
+                      img="lms"
+                      kategori={form.kategori || "teknologi"}
+                      className="h-full w-full"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                </div>
+
                 <p className="mt-3 text-[15px] font-bold text-ink dark:text-white">{form.judul || "Judul Riset Anda"}</p>
                 <p className="text-[12px] text-sub">Universitas Brawijaya</p>
                 <p className="mt-2 w-fit rounded-full bg-white dark:bg-[#101f2e] px-2.5 py-0.5 text-[11.5px] font-semibold text-brand-600 ring-1 ring-line dark:ring-white/10">
                   Lisensi: {form.lisensi}
                 </p>
                 <p className="mt-3 text-[13px] leading-relaxed text-ink/80 dark:text-white/75">
-                  {form.deskripsi ||
-                    "Sistem irigasi otomatis yang dapat memonitor kelembapan tanah dan cuaca secara real-time menggunakan sensor IoT untuk efisiensi penggunaan air."}
+                  {form.deskripsi || "Sistem irigasi otomatis yang dapat memonitor kelembapan tanah dan cuaca secara real-time menggunakan sensor IoT untuk efisiensi penggunaan air."}
                 </p>
                 <p className="mt-3 text-[13px] font-bold text-ink dark:text-white">Manfaat</p>
                 <ul className="mt-1 list-disc pl-4 text-[13px] text-ink/80 dark:text-white/75">
@@ -239,11 +331,12 @@ export default function UploadRiset() {
             </div>
           )}
 
+          {/* Navigation buttons */}
           <div className="mt-6 flex justify-end gap-3">
             {step > 1 && (
               <button
                 onClick={() => setStep((s) => Math.max(s - 1, 1))}
-                className="tap rounded-xl bg-sky-100 dark:bg-white/5 px-5 py-3 text-[13px] font-bold text-brand-700"
+                className="tap rounded-xl bg-sky-100 dark:bg-white/5 px-5 py-3 text-[13px] font-bold text-brand-700 dark:text-brand-300 transition-colors hover:bg-sky-200 dark:hover:bg-white/10"
               >
                 Kembali
               </button>
@@ -252,15 +345,20 @@ export default function UploadRiset() {
               <button
                 onClick={() => setStep((s) => Math.min(s + 1, 4))}
                 disabled={step === 3 && !checked}
-                className={`tap rounded-xl px-6 py-3 text-[13px] font-bold text-white ${
-                  step === 3 && !checked ? "bg-brand-300" : "bg-brand-600"
+                className={`tap rounded-xl px-6 py-3 text-[13px] font-bold text-white transition-colors ${
+                  step === 3 && !checked
+                    ? "bg-brand-300 cursor-not-allowed"
+                    : "bg-brand-600 hover:bg-brand-700"
                 }`}
               >
                 Selanjutnya
               </button>
             ) : (
-              <button onClick={publish} className="tap rounded-xl bg-brand-600 px-6 py-3 text-[13px] font-bold text-white">
-                Terbitkan
+              <button
+                onClick={publish}
+                className="tap rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 px-6 py-3 text-[13px] font-bold text-white shadow-lg shadow-brand-600/30 hover:shadow-brand-600/50 transition-all hover:-translate-y-0.5"
+              >
+                Terbitkan Riset
               </button>
             )}
           </div>

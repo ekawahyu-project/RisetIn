@@ -25,6 +25,7 @@ export const risetList = [
     tahap: "Purwarupa fisik",
     status: "diterbitkan",
     img: "irrigation",
+    imgUrl: "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Sistem irigasi otomatis yang dapat memonitor kelembapan tanah dan cuaca secara real-time menggunakan sensor IoT untuk efisiensi penggunaan air.",
     manfaat: ["Hemat air hingga 40%", "Meningkatkan hasil panen", "Monitoring via aplikasi real-time"],
@@ -42,6 +43,7 @@ export const risetList = [
     tahap: "Purwarupa fisik",
     status: "diterbitkan",
     img: "parking",
+    imgUrl: "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Sistem parkir pintar yang mendeteksi slot kosong secara otomatis menggunakan kamera AI, terintegrasi dengan aplikasi pemesanan slot.",
     manfaat: ["Efisiensi pencarian slot 60%", "Mengurangi kemacetan area parkir", "Integrasi pembayaran digital"],
@@ -59,6 +61,7 @@ export const risetList = [
     tahap: "Tinjauan literatur",
     status: "diterbitkan",
     img: "robot",
+    imgUrl: "https://images.unsplash.com/photo-1565043589221-1a6fd9ae45c7?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Perangkat pemindai roda dua yang menggunakan sensor visual untuk mendeteksi cacat produk lini produksi secara instan sebelum dikemas.",
     manfaat: ["Deteksi cacat produk 24 jam nonstop", "Meningkatkan konsistensi mutu", "Mengurangi biaya kontrol kualitas"],
@@ -76,6 +79,7 @@ export const risetList = [
     tahap: "Desain omnidireksional",
     status: "diterbitkan",
     img: "posture",
+    imgUrl: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Perangkat pintar berbasis sensor akselerometer/giroskop yang memantau postur tubuh secara real-time. Sistem ini akan memberikan peringatan instan (getaran/notifikasi) saat pengguna mendeteksi postur tubuh membungkuk atau duduk terlalu lama.",
     manfaat: ["Deteksi Dini Postur", "Meningkatkan Kesehatan & Produktivitas", "Ramah Lingkungan & Rendah Bising"],
@@ -93,6 +97,7 @@ export const risetList = [
     tahap: "Purwarupa fisik",
     status: "diterbitkan",
     img: "solar-irrigation",
+    imgUrl: "https://images.unsplash.com/photo-1508193638397-1c4234db14d8?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Sistem irigasi pintar berbasis panel solar (off-grid) yang memanfaatkan sumber energi mandiri untuk menggerakkan pompa air sekaligus menyiram tanaman berdasarkan kelembapan tanah.",
     manfaat: ["Hemat Biaya Operasional", "Ramah lingkungan", "Cocok untuk lahan tanpa listrik"],
@@ -110,6 +115,7 @@ export const risetList = [
     tahap: "Tinjauan literatur",
     status: "diterbitkan",
     img: "soil",
+    imgUrl: "https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Jaringan sensor nirkabel yang memantau kelembapan tanah lintas petak lahan, mengirimkan data ke dashboard untuk pengambilan keputusan pertanian presisi.",
     manfaat: ["Data lahan real-time", "Mengurangi risiko gagal panen", "Skalabel untuk lahan luas"],
@@ -127,6 +133,7 @@ export const risetList = [
     tahap: "Purwarupa fisik",
     status: "diterbitkan",
     img: "air",
+    imgUrl: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Perangkat berbasis IoT yang memonitor parameter kualitas udara seperti PM2.5, CO2, VOC, suhu, dan kelembapan secara real-time untuk memberikan peringatan dini demi menjaga kesehatan lingkungan.",
     manfaat: ["Deteksi Polusi Dini", "Meningkatkan Kesehatan & Produktivitas", "Dashboard historis kualitas udara"],
@@ -144,6 +151,7 @@ export const risetList = [
     tahap: "Purwarupa fisik",
     status: "diterbitkan",
     img: "turbine",
+    imgUrl: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Pembangkit listrik tenaga angin inovatif dengan rotor poros vertikal yang mampu menangkap angin dari segala arah tanpa perlu penyesuaian posisi menghadap angin.",
     manfaat: ["Desain Omnidireksional", "Ideal untuk perkotaan atau wilayah angin berubah-ubah"],
@@ -161,6 +169,7 @@ export const risetList = [
     tahap: "Purwarupa fisik",
     status: "diterbitkan",
     img: "aquaponic",
+    imgUrl: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Sistem akuaponik cerdas yang mengintegrasikan pemantauan kualitas air, pemberian pakan otomatis, dan kontrol iklim berbasis AI untuk budidaya ikan dan sayuran sekaligus.",
     manfaat: ["Efisiensi pakan otomatis", "Hasil panen ganda (ikan & sayur)", "Kontrol dari smartphone"],
@@ -178,6 +187,7 @@ export const risetList = [
     tahap: "Gagasan murni",
     status: "draf",
     img: "lms",
+    imgUrl: null,
     ringkasan:
       "Platform pembelajaran daring yang memungkinkan interaksi materi lewat perintah suara untuk meningkatkan aksesibilitas belajar, terutama bagi penyandang disabilitas.",
     manfaat: ["Aksesibilitas belajar lebih inklusif", "Navigasi materi tanpa mengetik"],
@@ -195,6 +205,7 @@ export const risetList = [
     tahap: "Purwarupa fisik",
     status: "diterbitkan",
     img: "posture",
+    imgUrl: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Perangkat wearable ringan yang memantau sinyal EKG secara kontinu dan mengirimkan peringatan dini ke ponsel pengguna serta tenaga medis saat mendeteksi indikasi aritmia.",
     manfaat: ["Deteksi dini gangguan irama jantung", "Data riwayat kesehatan tersimpan otomatis", "Notifikasi darurat ke keluarga/medis"],
@@ -212,6 +223,7 @@ export const risetList = [
     tahap: "Purwarupa fisik",
     status: "diterbitkan",
     img: "robot",
+    imgUrl: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Mesin sortasi otomatis yang menggunakan computer vision untuk mengklasifikasikan buah berdasarkan ukuran, warna, dan tingkat kematangan pada lini pengemasan.",
     manfaat: ["Sortasi 3x lebih cepat dari manual", "Konsistensi grading kualitas ekspor", "Mengurangi kebutuhan tenaga kerja manual"],
@@ -229,6 +241,7 @@ export const risetList = [
     tahap: "Tinjauan literatur",
     status: "diterbitkan",
     img: "turbine",
+    imgUrl: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Panel surya berbahan fleksibel yang dirancang tahan terhadap kelembapan tinggi dan mudah dipasang di berbagai bentuk atap rumah di iklim tropis.",
     manfaat: ["Instalasi lebih ringan & fleksibel", "Tahan kelembapan tinggi", "Cocok untuk rumah tapak perkotaan"],
@@ -246,6 +259,7 @@ export const risetList = [
     tahap: "Purwarupa fisik",
     status: "diterbitkan",
     img: "aquaponic",
+    imgUrl: "https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Material bioplastik biodegradable yang diproduksi dari limbah kulit singkong, ditujukan sebagai alternatif kemasan ramah lingkungan bagi UMKM makanan.",
     manfaat: ["Terurai alami dalam hitungan minggu", "Memanfaatkan limbah pertanian", "Biaya produksi kompetitif untuk UMKM"],
@@ -263,6 +277,7 @@ export const risetList = [
     tahap: "Purwarupa fisik",
     status: "diterbitkan",
     img: "irrigation",
+    imgUrl: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Drone penyemprot otomatis dengan pemetaan lahan presisi yang mengoptimalkan dosis pupuk dan pestisida sesuai kebutuhan titik lahan spesifik.",
     manfaat: ["Efisiensi penggunaan pupuk hingga 30%", "Pemetaan lahan otomatis", "Mengurangi paparan bahan kimia ke petani"],
@@ -280,6 +295,7 @@ export const risetList = [
     tahap: "Tinjauan literatur",
     status: "diterbitkan",
     img: "air",
+    imgUrl: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Platform berbasis machine learning yang memprediksi kondisi cuaca dan gelombang laut mikro di wilayah tangkap nelayan lokal untuk meningkatkan keselamatan melaut.",
     manfaat: ["Prediksi cuaca hyperlocal", "Peringatan dini gelombang tinggi", "Akses gratis lewat aplikasi ringan"],

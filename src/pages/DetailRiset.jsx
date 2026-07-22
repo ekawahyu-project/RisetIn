@@ -47,7 +47,10 @@ export default function DetailRiset() {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="overflow-hidden rounded-2xl bg-white shadow-card dark:bg-[#101f2e] dark:ring-1 dark:ring-white/5">
-            <RisetThumb img={r.img} kategori={r.kategori} className="h-56 w-full sm:h-72" />
+            <div className="relative h-56 w-full overflow-hidden sm:h-72">
+              <RisetThumb img={r.img} imgUrl={r.imgUrl} kategori={r.kategori} className="h-full w-full" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+            </div>
 
             <div className="p-5 sm:p-6">
               <h2 className="text-xl font-extrabold leading-snug text-ink dark:text-white sm:text-2xl">{r.judul}</h2>
@@ -223,7 +226,9 @@ export default function DetailRiset() {
                     onClick={() => navigate(`/riset/${x.id}`)}
                     className="tap flex w-full items-center gap-2.5 rounded-xl bg-sky-50 p-2.5 text-left dark:bg-white/5"
                   >
-                    <RisetThumb img={x.img} kategori={x.kategori} className="h-10 w-10 shrink-0 rounded-lg" />
+                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg">
+                      <RisetThumb img={x.img} imgUrl={x.imgUrl} kategori={x.kategori} className="h-full w-full" />
+                    </div>
                     <p className="truncate text-[12.5px] font-medium text-ink dark:text-white/85">{x.judul}</p>
                   </button>
                 ))}
