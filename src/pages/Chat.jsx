@@ -32,32 +32,32 @@ export default function Chat() {
 
   return (
     <Container>
-      <div className="mx-auto flex h-[calc(100vh-9rem)] max-w-3xl flex-col overflow-hidden rounded-2xl bg-white shadow-card lg:h-[calc(100vh-7rem)]">
-        <div className="flex shrink-0 items-center gap-3 border-b border-line px-4 py-3.5">
-          <button onClick={() => navigate(-1)} className="tap flex h-8 w-8 items-center justify-center rounded-full hover:bg-sky-100">
+      <div className="mx-auto flex h-[calc(100vh-9rem)] max-w-3xl flex-col overflow-hidden rounded-2xl bg-white dark:bg-[#101f2e] shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 lg:h-[calc(100vh-7rem)]">
+        <div className="flex shrink-0 items-center gap-3 border-b border-line dark:border-white/10 px-4 py-3.5">
+          <button onClick={() => navigate(-1)} className="tap flex h-8 w-8 items-center justify-center rounded-full hover:bg-sky-100 dark:hover:bg-white/10">
             <ChevronLeft size={19} />
           </button>
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">
             {lawan?.[0] || "?"}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[13.5px] font-bold text-ink">{lawan}</p>
+            <p className="truncate text-[13.5px] font-bold text-ink dark:text-white">{lawan}</p>
             <p className="text-[11px] text-leaf">Online</p>
           </div>
-          <button className="tap flex h-8 w-8 items-center justify-center rounded-full bg-sky-100 text-brand-700">
+          <button className="tap flex h-8 w-8 items-center justify-center rounded-full bg-sky-100 dark:bg-white/5 text-brand-700">
             <Phone size={15} />
           </button>
         </div>
 
-        <div className="no-scrollbar flex-1 space-y-3 overflow-y-auto bg-sky-50 p-5">
+        <div className="no-scrollbar flex-1 space-y-3 overflow-y-auto bg-sky-50 dark:bg-white/5 p-5">
           <div className="flex justify-center">
-            <span className="rounded-full bg-white px-3 py-1 text-[11px] text-sub shadow-card">Hari ini</span>
+            <span className="rounded-full bg-white dark:bg-[#101f2e] px-3 py-1 text-[11px] text-sub shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">Hari ini</span>
           </div>
           {messages.map((m) => (
             <div key={m.id} className={`flex ${m.from === "me" ? "justify-end" : "justify-start"}`}>
               <div
-                className={`max-w-[70%] rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed shadow-card ${
-                  m.from === "me" ? "rounded-br-md bg-brand-600 text-white" : "rounded-bl-md bg-white text-ink"
+                className={`max-w-[70%] rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 ${
+                  m.from === "me" ? "rounded-br-md bg-brand-600 text-white" : "rounded-bl-md bg-white dark:bg-[#101f2e] text-ink dark:text-white"
                 }`}
               >
                 {m.text}
@@ -67,17 +67,17 @@ export default function Chat() {
           ))}
         </div>
 
-        <div className="flex shrink-0 items-center gap-2 border-t border-line p-3">
-          <button className="tap flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky-100 text-brand-600">
+        <div className="flex shrink-0 items-center gap-2 border-t border-line dark:border-white/10 p-3">
+          <button className="tap flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky-100 dark:bg-white/5 text-brand-600">
             <Plus size={16} />
           </button>
-          <div className="flex flex-1 items-center gap-2 rounded-full bg-sky-100 px-4 py-2.5">
+          <div className="flex flex-1 items-center gap-2 rounded-full bg-sky-100 dark:bg-white/5 px-4 py-2.5">
             <input
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && send()}
               placeholder="Ketik pesan di sini..."
-              className="w-full bg-transparent text-[13px] text-ink placeholder:text-brand-300 focus:outline-none"
+              className="w-full bg-transparent text-[13px] text-ink dark:text-white placeholder:text-brand-300 focus:outline-none"
             />
             <Smile size={16} className="shrink-0 text-brand-300" />
           </div>

@@ -23,16 +23,20 @@ export default function Notifikasi() {
     <Container>
       <PageHeader title="Notifikasi" subtitle="Pembaruan seputar riset dan kolaborasi Anda" />
       <div className="space-y-3">
-        {notifications.map((n) => {
+        {notifications.map((n, i) => {
           const { Icon, cls } = iconFor[n.type] || iconFor.info;
           return (
-            <div key={n.id} className="flex gap-3 rounded-2xl bg-white p-4 shadow-card sm:p-5">
+            <div
+              key={n.id}
+              style={{ animationDelay: `${i * 40}ms` }}
+              className="fade-up flex gap-3 rounded-2xl bg-white p-4 shadow-card dark:bg-[#101f2e] dark:ring-1 dark:ring-white/5 sm:p-5"
+            >
               <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${cls}`}>
                 <Icon size={17} />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-2">
-                  <p className="text-[13.5px] font-bold leading-snug text-ink">{n.title}</p>
+                  <p className="text-[13.5px] font-bold leading-snug text-ink dark:text-white">{n.title}</p>
                   {n.unread && <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-berry" />}
                 </div>
                 <p className="mt-1 text-[13px] leading-relaxed text-sub">{n.body}</p>

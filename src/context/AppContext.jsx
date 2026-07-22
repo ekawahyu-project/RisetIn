@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {
   risetList,
   notifications as notifSeed,
@@ -6,15 +6,27 @@ import {
   collaborationsBerjalan,
   industryCollabPengajuan,
   industryCollabBerjalan,
+  commentsSeed,
   userMahasiswa,
   userIndustri,
 } from "../data/mockData";
 
 const AppContext = createContext(null);
 
+function getInitialTheme() {
+  if (typeof window === "undefined") return "light";
+  const saved = window.localStorage.getItem("risetin-theme");
+  if (saved) return saved;
+  return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
 export function AppProvider({ children }) {
+  const [authed, setAuthed] = useState(false);
   const [role, setRole] = useState("mahasiswa"); // "mahasiswa" | "industri"
-  const [riset, setRiset] = useState(risetList);
+  const [theme, setTheme] = useState(getInitialTheme);
+
+  const [riset, setRiset] = useState(() => risetList.map((r) => ({ ...r, liked: false })));
+  const [comments, setComments] = useState(commentsSeed);
   const [notifications, setNotifications] = useState(notifSeed);
   const [masuk, setMasuk] = useState(collaborationsMasuk);
   const [berjalan, setBerjalan] = useState(collaborationsBerjalan);
@@ -22,16 +34,36 @@ export function AppProvider({ children }) {
   const [indBerjalan, setIndBerjalan] = useState(industryCollabBerjalan);
   const [toast, setToast] = useState(null);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "dark") root.classList.add("dark");
+    else root.classList.remove("dark");
+    window.localStorage.setItem("risetin-theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+
   const showToast = (msg) => {
     setToast(msg);
     window.clearTimeout(showToast._t);
     showToast._t = window.setTimeout(() => setToast(null), 2400);
   };
 
+  const login = ({ email }) => {
+    const isIndustri = /industri/i.test(email || "");
+    setRole(isIndustri ? "industri" : "mahasiswa");
+    setAuthed(true);
+    showToast(isIndustri ? "Berhasil masuk sebagai Industri" : "Berhasil masuk sebagai Mahasiswa");
+  };
+
+  const logout = () => {
+    setAuthed(false);
+    showToast("Anda telah keluar");
+  };
+
   const unreadCount = notifications.filter((n) => n.unread).length;
 
-  const markAllRead = () =>
-    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+  const markAllRead = () => setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
 
   const acceptMasuk = (id) => {
     const item = masuk.find((m) => m.id === id);
@@ -51,22 +83,46 @@ export function AppProvider({ children }) {
   };
 
   const advanceStage = (id) => {
-    setBerjalan((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, tahap: Math.min(p.tahap + 1, 4) } : p))
-    );
+    setBerjalan((prev) => prev.map((p) => (p.id === id ? { ...p, tahap: Math.min(p.tahap + 1, 4) } : p)));
   };
 
   const addRiset = (item) => {
-    setRiset((prev) => [{ ...item }, ...prev]);
+    setRiset((prev) => [{ ...item, liked: false }, ...prev]);
+  };
+
+  const toggleLike = (id) => {
+    setRiset((prev) =>
+      prev.map((r) => (r.id === id ? { ...r, liked: !r.liked, suka: r.liked ? r.suka - 1 : r.suka + 1 } : r))
+    );
+  };
+
+  const addComment = (risetId, text) => {
+    const entry = {
+      id: "cm" + Date.now(),
+      nama: role === "mahasiswa" ? userMahasiswa.nama : userIndustri.nama,
+      inisial: role === "mahasiswa" ? userMahasiswa.inisial : userIndustri.inisial,
+      text,
+      time: "Baru saja",
+    };
+    setComments((prev) => ({ ...prev, [risetId]: [...(prev[risetId] || []), entry] }));
+    setRiset((prev) => prev.map((r) => (r.id === risetId ? { ...r, komentar: r.komentar + 1 } : r)));
   };
 
   const value = useMemo(
     () => ({
+      authed,
+      login,
+      logout,
       role,
       setRole,
+      theme,
+      toggleTheme,
       user: role === "mahasiswa" ? userMahasiswa : userIndustri,
       riset,
       addRiset,
+      toggleLike,
+      comments,
+      addComment,
       notifications,
       unreadCount,
       markAllRead,
@@ -80,7 +136,20 @@ export function AppProvider({ children }) {
       toast,
       showToast,
     }),
-    [role, riset, notifications, unreadCount, masuk, berjalan, indPengajuan, indBerjalan, toast]
+    [
+      authed,
+      role,
+      theme,
+      riset,
+      comments,
+      notifications,
+      unreadCount,
+      masuk,
+      berjalan,
+      indPengajuan,
+      indBerjalan,
+      toast,
+    ]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

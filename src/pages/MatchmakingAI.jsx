@@ -27,14 +27,14 @@ export default function MatchmakingAI() {
     <Container wide>
       <PageHeader title="Matchmaking AI" subtitle="Ceritakan kebutuhan bisnis Anda, temukan riset yang paling cocok" />
 
-      <div className="mx-auto flex h-[calc(100vh-11rem)] max-w-3xl flex-col overflow-hidden rounded-2xl bg-white shadow-card lg:h-[calc(100vh-9rem)]">
+      <div className="mx-auto flex h-[calc(100vh-11rem)] max-w-3xl flex-col overflow-hidden rounded-2xl bg-white dark:bg-[#101f2e] shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 lg:h-[calc(100vh-9rem)]">
         <div className="no-scrollbar flex-1 overflow-y-auto p-6">
           {stage === "idle" && (
             <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-soft">
                 <Sparkles size={24} />
               </div>
-              <p className="max-w-xs text-[16px] font-bold text-ink">Temukan kecocokan riset dengan kebutuhan industri</p>
+              <p className="max-w-xs text-[16px] font-bold text-ink dark:text-white">Temukan kecocokan riset dengan kebutuhan industri</p>
               <p className="max-w-sm text-[12.5px] text-sub">
                 Contoh: "Lahan pertanian industri kami butuh modernisasi manajemen air yang adaptif dan hemat."
               </p>
@@ -44,13 +44,13 @@ export default function MatchmakingAI() {
           {stage !== "idle" && (
             <div className="space-y-4">
               <div className="flex justify-end">
-                <div className="max-w-[80%] rounded-2xl rounded-br-md bg-brand-600 px-4 py-3 text-[13px] leading-relaxed text-white shadow-card fade-up">
+                <div className="max-w-[80%] rounded-2xl rounded-br-md bg-brand-600 px-4 py-3 text-[13px] leading-relaxed text-white shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 fade-up">
                   {query}
                 </div>
               </div>
 
               {stage === "thinking" && (
-                <div className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md bg-sky-50 px-4 py-3 shadow-card">
+                <div className="flex w-fit items-center gap-1.5 rounded-2xl rounded-bl-md bg-sky-50 dark:bg-white/5 px-4 py-3 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
                   <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-brand-300 [animation-delay:-0.2s]" />
                   <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-brand-300 [animation-delay:-0.1s]" />
                   <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-brand-300" />
@@ -59,10 +59,10 @@ export default function MatchmakingAI() {
 
               {stage === "result" && (
                 <div className="fade-up space-y-4">
-                  <p className="text-[13px] leading-relaxed text-ink">
+                  <p className="text-[13px] leading-relaxed text-ink dark:text-white">
                     Berikut adalah hasil rekomendasi berdasarkan Matchmaking AI dari kebutuhan yang telah Anda ceritakan.
                   </p>
-                  <p className="text-[13.5px] font-bold text-ink">Hasil Rekomendasi</p>
+                  <p className="text-[13.5px] font-bold text-ink dark:text-white">Hasil Rekomendasi</p>
                   <div className="grid gap-3 sm:grid-cols-2">
                     {matchmakingResults.map((m) => {
                       const r = riset.find((x) => x.id === m.risetId);
@@ -71,11 +71,11 @@ export default function MatchmakingAI() {
                         <button
                           key={m.risetId}
                           onClick={() => navigate(`/riset/${r.id}`)}
-                          className="tap flex w-full items-center gap-3 rounded-2xl bg-sky-50 p-3 text-left"
+                          className="tap flex w-full items-center gap-3 rounded-2xl bg-sky-50 dark:bg-white/5 p-3 text-left"
                         >
                           <RisetThumb img={r.img} kategori={r.kategori} className="h-14 w-14 shrink-0 rounded-xl" />
                           <div className="min-w-0 flex-1">
-                            <p className="truncate text-[12.5px] font-semibold text-ink">{r.judul}</p>
+                            <p className="truncate text-[12.5px] font-semibold text-ink dark:text-white">{r.judul}</p>
                             <p className="truncate text-[11px] text-sub">{r.kampus}</p>
                             <div className="mt-1.5 flex items-center gap-1.5">
                               <CategoryBadge kategori={r.kategori} />
@@ -94,9 +94,9 @@ export default function MatchmakingAI() {
           )}
         </div>
 
-        <div className="shrink-0 border-t border-line p-4">
-          <div className="mx-auto flex max-w-xl items-center gap-2 rounded-full bg-sky-100 px-4 py-2">
-            <button className="tap flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-brand-600">
+        <div className="shrink-0 border-t border-line dark:border-white/10 p-4">
+          <div className="mx-auto flex max-w-xl items-center gap-2 rounded-full bg-sky-100 dark:bg-white/5 px-4 py-2">
+            <button className="tap flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white dark:bg-[#101f2e] text-brand-600">
               <Plus size={15} />
             </button>
             <input
@@ -104,7 +104,7 @@ export default function MatchmakingAI() {
               onChange={(e) => setText(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && submit()}
               placeholder="Ceritakan kebutuhan Anda"
-              className="w-full bg-transparent py-1.5 text-[13px] text-ink placeholder:text-brand-300 focus:outline-none"
+              className="w-full bg-transparent py-1.5 text-[13px] text-ink dark:text-white placeholder:text-brand-300 focus:outline-none"
             />
             <button className="tap shrink-0 text-brand-400">
               <Mic size={17} />

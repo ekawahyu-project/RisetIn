@@ -24,7 +24,7 @@ export default function BottomNav() {
         ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-30 flex items-end justify-between border-t border-line bg-white/95 px-4 pb-2 pt-1.5 backdrop-blur lg:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-30 flex items-end justify-between border-t border-line bg-white/95 px-4 pb-2 pt-1.5 backdrop-blur dark:border-white/10 dark:bg-[#0b1420]/95 lg:hidden">
       {items.map((it) =>
         it.isFab ? (
           <NavLink key={it.to} to={it.to} className="relative -mt-6 flex flex-col items-center">
@@ -39,7 +39,7 @@ export default function BottomNav() {
             end={it.end}
             className={({ isActive }) =>
               `tap flex flex-col items-center gap-0.5 px-2 py-1.5 text-[10.5px] font-medium ${
-                isActive ? "text-brand-600" : "text-sub"
+                isActive ? "text-brand-600 dark:text-brand-300" : "text-sub"
               }`
             }
           >

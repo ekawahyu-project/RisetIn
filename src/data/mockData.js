@@ -182,6 +182,108 @@ export const risetList = [
       "Platform pembelajaran daring yang memungkinkan interaksi materi lewat perintah suara untuk meningkatkan aksesibilitas belajar, terutama bagi penyandang disabilitas.",
     manfaat: ["Aksesibilitas belajar lebih inklusif", "Navigasi materi tanpa mengetik"],
   },
+  {
+    id: "r11",
+    judul: "Wearable Deteksi Dini Aritmia Jantung",
+    kampus: "Institut Teknologi Bandung",
+    kategori: "kesehatan",
+    lisensi: "CC BY-SA",
+    views: 812,
+    komentar: 21,
+    suka: 340,
+    diadopsi: 6,
+    tahap: "Purwarupa fisik",
+    status: "diterbitkan",
+    img: "posture",
+    ringkasan:
+      "Perangkat wearable ringan yang memantau sinyal EKG secara kontinu dan mengirimkan peringatan dini ke ponsel pengguna serta tenaga medis saat mendeteksi indikasi aritmia.",
+    manfaat: ["Deteksi dini gangguan irama jantung", "Data riwayat kesehatan tersimpan otomatis", "Notifikasi darurat ke keluarga/medis"],
+  },
+  {
+    id: "r12",
+    judul: "Sistem Sortasi Buah Otomatis Berbasis Computer Vision",
+    kampus: "Institut Pertanian Bogor",
+    kategori: "manufaktur",
+    lisensi: "CC BY-SA",
+    views: 431,
+    komentar: 9,
+    suka: 176,
+    diadopsi: 3,
+    tahap: "Purwarupa fisik",
+    status: "diterbitkan",
+    img: "robot",
+    ringkasan:
+      "Mesin sortasi otomatis yang menggunakan computer vision untuk mengklasifikasikan buah berdasarkan ukuran, warna, dan tingkat kematangan pada lini pengemasan.",
+    manfaat: ["Sortasi 3x lebih cepat dari manual", "Konsistensi grading kualitas ekspor", "Mengurangi kebutuhan tenaga kerja manual"],
+  },
+  {
+    id: "r13",
+    judul: "Panel Surya Fleksibel untuk Atap Rumah Tropis",
+    kampus: "Institut Teknologi Sepuluh Nopember",
+    kategori: "energi",
+    lisensi: "CC BY-SA",
+    views: 297,
+    komentar: 5,
+    suka: 128,
+    diadopsi: 1,
+    tahap: "Tinjauan literatur",
+    status: "diterbitkan",
+    img: "turbine",
+    ringkasan:
+      "Panel surya berbahan fleksibel yang dirancang tahan terhadap kelembapan tinggi dan mudah dipasang di berbagai bentuk atap rumah di iklim tropis.",
+    manfaat: ["Instalasi lebih ringan & fleksibel", "Tahan kelembapan tinggi", "Cocok untuk rumah tapak perkotaan"],
+  },
+  {
+    id: "r14",
+    judul: "Bioplastik dari Limbah Kulit Singkong",
+    kampus: "Universitas Padjadjaran",
+    kategori: "lingkungan",
+    lisensi: "CC BY-SA",
+    views: 356,
+    komentar: 12,
+    suka: 205,
+    diadopsi: 2,
+    tahap: "Purwarupa fisik",
+    status: "diterbitkan",
+    img: "aquaponic",
+    ringkasan:
+      "Material bioplastik biodegradable yang diproduksi dari limbah kulit singkong, ditujukan sebagai alternatif kemasan ramah lingkungan bagi UMKM makanan.",
+    manfaat: ["Terurai alami dalam hitungan minggu", "Memanfaatkan limbah pertanian", "Biaya produksi kompetitif untuk UMKM"],
+  },
+  {
+    id: "r15",
+    judul: "Drone Penyemprot Presisi untuk Lahan Perkebunan",
+    kampus: "Universitas Gadjah Mada",
+    kategori: "pertanian",
+    lisensi: "CC BY-SA",
+    views: 604,
+    komentar: 17,
+    suka: 289,
+    diadopsi: 4,
+    tahap: "Purwarupa fisik",
+    status: "diterbitkan",
+    img: "irrigation",
+    ringkasan:
+      "Drone penyemprot otomatis dengan pemetaan lahan presisi yang mengoptimalkan dosis pupuk dan pestisida sesuai kebutuhan titik lahan spesifik.",
+    manfaat: ["Efisiensi penggunaan pupuk hingga 30%", "Pemetaan lahan otomatis", "Mengurangi paparan bahan kimia ke petani"],
+  },
+  {
+    id: "r16",
+    judul: "Platform Prediksi Cuaca Mikro untuk Nelayan",
+    kampus: "Universitas Hasanuddin",
+    kategori: "teknologi",
+    lisensi: "CC BY-SA",
+    views: 219,
+    komentar: 6,
+    suka: 143,
+    diadopsi: 1,
+    tahap: "Tinjauan literatur",
+    status: "diterbitkan",
+    img: "air",
+    ringkasan:
+      "Platform berbasis machine learning yang memprediksi kondisi cuaca dan gelombang laut mikro di wilayah tangkap nelayan lokal untuk meningkatkan keselamatan melaut.",
+    manfaat: ["Prediksi cuaca hyperlocal", "Peringatan dini gelombang tinggi", "Akses gratis lewat aplikasi ringan"],
+  },
 ];
 
 export const risetSayaIds = ["r1", "r2", "r3", "r9", "r10"];
@@ -280,6 +382,36 @@ export const tahapanKolaborasi = [
   { key: "implementasi", label: "Implementasi", desc: "Penerapan & evaluasi" },
   { key: "hilirisasi", label: "Hilirisasi", desc: "Komersialisasi atau adopsi" },
 ];
+
+export const commentsSeed = {
+  r1: [
+    {
+      id: "cm1",
+      nama: "PT Agro Makmur",
+      inisial: "AM",
+      text: "Apakah sistem ini sudah diuji untuk lahan sawah dengan kemiringan tertentu?",
+      time: "2 hari lalu",
+    },
+    {
+      id: "cm2",
+      nama: "Dr. Sinta Wulandari",
+      inisial: "SW",
+      text: "Riset yang sangat aplikatif, cocok untuk mendukung ketahanan pangan daerah kering.",
+      time: "1 hari lalu",
+    },
+  ],
+  r3: [
+    {
+      id: "cm3",
+      nama: "PT Indomeal",
+      inisial: "PI",
+      text: "Berapa rata-rata akurasi deteksi cacat produk pada uji coba terakhir?",
+      time: "3 hari lalu",
+    },
+  ],
+};
+
+export const commentCountFallback = 0;
 
 export const chatSeed = [
   {

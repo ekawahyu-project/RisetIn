@@ -5,13 +5,17 @@ import { useApp } from "../context/AppContext";
 import { RisetCardGrid } from "../components/RisetCard";
 import Container from "../components/Container";
 
-function StatCard({ icon: Icon, label, value, onClick }) {
+function StatCard({ icon: Icon, label, value, onClick, delay = 0 }) {
   return (
-    <button onClick={onClick} className="tap rounded-2xl bg-white p-4 text-left shadow-card sm:p-5">
-      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-brand-600">
+    <button
+      onClick={onClick}
+      style={{ animationDelay: `${delay}ms` }}
+      className="tap lift fade-up rounded-2xl bg-white p-4 text-left shadow-card dark:bg-[#101f2e] dark:shadow-none dark:ring-1 dark:ring-white/5 sm:p-5"
+    >
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-brand-600 dark:bg-white/10 dark:text-brand-300">
         <Icon size={18} />
       </div>
-      <p className="mt-3 text-2xl font-extrabold text-ink">{value}</p>
+      <p className="mt-3 text-2xl font-extrabold text-ink dark:text-white">{value}</p>
       <p className="text-[12.5px] text-sub">{label}</p>
     </button>
   );
@@ -25,31 +29,36 @@ export default function Beranda() {
     const terbaru = riset.filter((r) => r.status === "diterbitkan").slice(0, 8);
     return (
       <Container wide>
-        <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-brand-700 to-brand-600 p-6 text-white sm:p-8">
-          <p className="text-[13px] text-white/70">Selamat datang,</p>
-          <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">{user.nama}</h1>
-          <p className="mt-2 max-w-lg text-[13px] leading-relaxed text-white/75">
-            Temukan riset mahasiswa yang paling relevan dengan kebutuhan bisnis Anda lewat Matchmaking AI, atau jelajahi katalog riset dari berbagai kampus.
+        <div className="fade-up relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-700 via-brand-600 to-brand-500 p-6 text-white sm:p-8">
+          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
+          <p className="relative text-[13px] text-white/70">Selamat datang,</p>
+          <h1 className="relative mt-1 text-2xl font-extrabold sm:text-3xl">{user.nama}</h1>
+          <p className="relative mt-2 max-w-lg text-[13px] leading-relaxed text-white/75">
+            Temukan riset mahasiswa yang paling relevan dengan kebutuhan bisnis Anda lewat Matchmaking AI, atau jelajahi katalog riset
+            dari berbagai kampus.
           </p>
           <button
             onClick={() => navigate("/matchmaking")}
-            className="tap mt-5 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold text-brand-700 shadow-soft"
+            className="tap relative mt-5 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold text-brand-700 shadow-soft transition-transform hover:-translate-y-0.5 hover:shadow-lg"
           >
             <Sparkles size={16} /> Coba Matchmaking AI
           </button>
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <StatCard icon={FlaskConical} label="Kebutuhan Aktif" value={user.stats.kebutuhan} onClick={() => navigate("/kolaborasi")} />
-          <StatCard icon={Users2} label="Kolaborasi" value={user.stats.kolaborasi} onClick={() => navigate("/kolaborasi")} />
-          <StatCard icon={Eye} label="Riset Dilihat" value={user.stats.dilihat} onClick={() => navigate("/riset")} />
-          <StatCard icon={CheckCircle2} label="Diadopsi" value={user.stats.diadopsi} />
+          <StatCard icon={FlaskConical} label="Kebutuhan Aktif" value={user.stats.kebutuhan} onClick={() => navigate("/kolaborasi")} delay={0} />
+          <StatCard icon={Users2} label="Kolaborasi" value={user.stats.kolaborasi} onClick={() => navigate("/kolaborasi")} delay={40} />
+          <StatCard icon={Eye} label="Riset Dilihat" value={user.stats.dilihat} onClick={() => navigate("/riset")} delay={80} />
+          <StatCard icon={CheckCircle2} label="Diadopsi" value={user.stats.diadopsi} delay={120} />
         </div>
 
         <div className="mt-8">
           <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-bold text-ink">Riset terbaru untuk Anda</h2>
-            <button onClick={() => navigate("/riset")} className="tap flex items-center text-[12.5px] font-semibold text-brand-600">
+            <h2 className="text-lg font-bold text-ink dark:text-white">Riset terbaru untuk Anda</h2>
+            <button
+              onClick={() => navigate("/riset")}
+              className="tap flex items-center text-[12.5px] font-semibold text-brand-600 dark:text-brand-300"
+            >
               Lihat semua <ChevronRight size={15} />
             </button>
           </div>
@@ -67,8 +76,9 @@ export default function Beranda() {
 
   return (
     <Container wide>
-      <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-brand-700 to-brand-600 p-6 text-white sm:p-8">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+      <div className="fade-up relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-700 via-brand-600 to-brand-500 p-6 text-white sm:p-8">
+        <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
+        <div className="relative flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <p className="text-[13px] text-white/70">Halo, {user.nama.split(" ")[0]}</p>
             <h1 className="mt-1 text-2xl font-extrabold sm:text-3xl">Selamat datang kembali!</h1>
@@ -78,7 +88,7 @@ export default function Beranda() {
           </div>
           <button
             onClick={() => navigate("/upload")}
-            className="tap inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold text-brand-700 shadow-soft"
+            className="tap inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-[13px] font-bold text-brand-700 shadow-soft transition-transform hover:-translate-y-0.5 hover:shadow-lg"
           >
             <UploadCloud size={16} /> Upload Riset
           </button>
@@ -86,16 +96,19 @@ export default function Beranda() {
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard icon={FlaskConical} label="Riset Saya" value={user.stats.riset} onClick={() => navigate("/riset-saya")} />
-        <StatCard icon={Users2} label="Kolaborasi Aktif" value={user.stats.kolaborasi} onClick={() => navigate("/kolaborasi")} />
-        <StatCard icon={Eye} label="Pengunjung" value={user.stats.pengunjung} />
-        <StatCard icon={CheckCircle2} label="Diadopsi" value={user.stats.diadopsi} onClick={() => navigate("/riset-saya")} />
+        <StatCard icon={FlaskConical} label="Riset Saya" value={user.stats.riset} onClick={() => navigate("/riset-saya")} delay={0} />
+        <StatCard icon={Users2} label="Kolaborasi Aktif" value={user.stats.kolaborasi} onClick={() => navigate("/kolaborasi")} delay={40} />
+        <StatCard icon={Eye} label="Pengunjung" value={user.stats.pengunjung} delay={80} />
+        <StatCard icon={CheckCircle2} label="Diadopsi" value={user.stats.diadopsi} onClick={() => navigate("/riset-saya")} delay={120} />
       </div>
 
       <div className="mt-8">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-ink">Riset terbaru</h2>
-          <button onClick={() => navigate("/riset-saya")} className="tap flex items-center text-[12.5px] font-semibold text-brand-600">
+          <h2 className="text-lg font-bold text-ink dark:text-white">Riset terbaru</h2>
+          <button
+            onClick={() => navigate("/riset-saya")}
+            className="tap flex items-center text-[12.5px] font-semibold text-brand-600 dark:text-brand-300"
+          >
             Lihat semua <ChevronRight size={15} />
           </button>
         </div>

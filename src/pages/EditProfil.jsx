@@ -15,11 +15,11 @@ export default function EditProfil() {
     <Container>
       <PageHeader title="Edit Profil" back />
 
-      <div className="mx-auto max-w-2xl rounded-2xl bg-white p-6 shadow-card sm:p-8">
+      <div className="mx-auto max-w-2xl rounded-2xl bg-white dark:bg-[#101f2e] p-6 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 sm:p-8">
         <div className="flex flex-col items-center">
           <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-brand-600 text-xl font-bold text-white">
             {user.inisial}
-            <button className="tap absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-white text-brand-600 shadow-card ring-1 ring-line">
+            <button className="tap absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-white dark:bg-[#101f2e] text-brand-600 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 ring-1 ring-line dark:ring-white/10">
               <Camera size={13} />
             </button>
           </div>
@@ -58,7 +58,7 @@ export default function EditProfil() {
 function Field({ label, children }) {
   return (
     <div>
-      <label className="mb-1.5 block text-[13px] font-semibold text-ink">{label}</label>
+      <label className="mb-1.5 block text-[13px] font-semibold text-ink dark:text-white">{label}</label>
       {children}
     </div>
   );

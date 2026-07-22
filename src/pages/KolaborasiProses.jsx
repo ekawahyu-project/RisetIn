@@ -29,11 +29,11 @@ export default function KolaborasiProses() {
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="lg:col-span-1">
-          <div className="rounded-2xl bg-white p-5 shadow-card">
+          <div className="rounded-2xl bg-white dark:bg-[#101f2e] p-5 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
             <div className="flex items-center gap-3">
               <RisetThumb img={r.img} kategori={r.kategori} className="h-14 w-14 shrink-0 rounded-xl" />
               <div className="min-w-0">
-                <p className="truncate text-[13.5px] font-bold text-ink">{r.judul}</p>
+                <p className="truncate text-[13.5px] font-bold text-ink dark:text-white">{r.judul}</p>
                 <p className="truncate text-[12px] text-sub">{r.kampus}</p>
                 <CategoryBadge kategori={r.kategori} className="mt-1.5" />
               </div>
@@ -43,7 +43,7 @@ export default function KolaborasiProses() {
 
             <button
               onClick={() => navigate(`/kolaborasi/chat/${proyek.id}`)}
-              className="tap mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-sky-100 py-3 text-[13px] font-bold text-brand-700"
+              className="tap mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-sky-100 dark:bg-white/5 py-3 text-[13px] font-bold text-brand-700"
             >
               <MessageSquare size={16} /> Buka Percakapan
             </button>
@@ -51,8 +51,8 @@ export default function KolaborasiProses() {
         </div>
 
         <div className="lg:col-span-2">
-          <div className="rounded-2xl bg-white p-6 shadow-card">
-            <p className="mb-5 text-[14px] font-bold text-ink">Tahapan Kolaborasi</p>
+          <div className="rounded-2xl bg-white dark:bg-[#101f2e] p-6 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
+            <p className="mb-5 text-[14px] font-bold text-ink dark:text-white">Tahapan Kolaborasi</p>
             <div className="space-y-0">
               {tahapanKolaborasi.map((t, i) => {
                 const done = i < proyek.tahap;
@@ -63,7 +63,7 @@ export default function KolaborasiProses() {
                     <div className="flex flex-col items-center">
                       <div
                         className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                          done ? "bg-brand-600 text-white" : active ? "bg-brand-100 ring-2 ring-brand-600" : "bg-sky-100"
+                          done ? "bg-brand-600 text-white" : active ? "bg-brand-100 ring-2 ring-brand-600" : "bg-sky-100 dark:bg-white/5"
                         }`}
                       >
                         {done && <Check size={14} />}
@@ -72,7 +72,7 @@ export default function KolaborasiProses() {
                       {!isLast && <div className={`w-0.5 flex-1 ${done ? "bg-brand-600" : "bg-line"}`} style={{ minHeight: 38 }} />}
                     </div>
                     <div className="pb-7">
-                      <p className={`text-[14px] font-semibold ${done || active ? "text-ink" : "text-sub"}`}>{t.label}</p>
+                      <p className={`text-[14px] font-semibold ${done || active ? "text-ink dark:text-white" : "text-sub"}`}>{t.label}</p>
                       <p className="text-[12.5px] text-sub">{t.desc}</p>
                     </div>
                   </div>

@@ -1,10 +1,10 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Home, Search, Users, User, Sparkles, UploadCloud, FlaskConical, ArrowLeftRight, LogOut } from "lucide-react";
+import { Home, Search, Users, Sparkles, UploadCloud, FlaskConical, ChevronRight } from "lucide-react";
 import { useApp } from "../context/AppContext";
 
 export default function Sidebar({ onNavigate }) {
-  const { role, setRole, user, showToast } = useApp();
+  const { role, user } = useApp();
   const navigate = useNavigate();
 
   const navItems =
@@ -23,7 +23,7 @@ export default function Sidebar({ onNavigate }) {
         ];
 
   return (
-    <aside className="flex h-full w-full flex-col bg-brand-800 text-white">
+    <aside className="flex h-full w-full flex-col bg-gradient-to-b from-brand-800 to-brand-900 text-white">
       <div className="flex items-center gap-2.5 px-6 py-6">
         <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-lg font-black">R</div>
         <div>
@@ -38,7 +38,7 @@ export default function Sidebar({ onNavigate }) {
             navigate("/upload");
             onNavigate?.();
           }}
-          className="tap mx-4 mb-2 flex items-center justify-center gap-2 rounded-xl bg-white py-2.5 text-[13px] font-bold text-brand-700 shadow-soft"
+          className="tap lift mx-4 mb-2 flex items-center justify-center gap-2 rounded-xl bg-white py-2.5 text-[13px] font-bold text-brand-700 shadow-soft hover:shadow-lg"
         >
           <UploadCloud size={16} /> Upload Riset
         </button>
@@ -48,7 +48,7 @@ export default function Sidebar({ onNavigate }) {
             navigate("/matchmaking");
             onNavigate?.();
           }}
-          className="tap mx-4 mb-2 flex items-center justify-center gap-2 rounded-xl bg-white py-2.5 text-[13px] font-bold text-brand-700 shadow-soft"
+          className="tap lift mx-4 mb-2 flex items-center justify-center gap-2 rounded-xl bg-white py-2.5 text-[13px] font-bold text-brand-700 shadow-soft hover:shadow-lg"
         >
           <Sparkles size={16} /> Matchmaking AI
         </button>
@@ -62,38 +62,28 @@ export default function Sidebar({ onNavigate }) {
             end={it.end}
             onClick={onNavigate}
             className={({ isActive }) =>
-              `flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] font-medium transition-colors ${
+              `group relative flex items-center gap-3 overflow-hidden rounded-xl px-3 py-2.5 text-[13.5px] font-medium transition-all duration-200 ${
                 isActive ? "bg-white/15 text-white" : "text-white/65 hover:bg-white/10 hover:text-white"
               }`
             }
           >
-            <it.icon size={18} />
-            {it.label}
+            {({ isActive }) => (
+              <>
+                {isActive && <span className="absolute left-0 top-0 h-full w-1 rounded-r-full bg-white" />}
+                <it.icon size={18} className="transition-transform duration-200 group-hover:scale-110" />
+                {it.label}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
-
-      <div className="mx-3 mb-2 border-t border-white/10 pt-3">
-        <button
-          onClick={() => {
-            setRole(role === "mahasiswa" ? "industri" : "mahasiswa");
-            navigate("/");
-            showToast(`Beralih ke mode ${role === "mahasiswa" ? "Industri" : "Mahasiswa"}`);
-            onNavigate?.();
-          }}
-          className="tap flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[12.5px] font-medium text-white/65 hover:bg-white/10 hover:text-white"
-        >
-          <ArrowLeftRight size={16} />
-          Mode {role === "mahasiswa" ? "Industri" : "Mahasiswa"}
-        </button>
-      </div>
 
       <button
         onClick={() => {
           navigate("/profil");
           onNavigate?.();
         }}
-        className="tap m-3 mt-0 flex items-center gap-3 rounded-xl bg-white/5 p-3 text-left hover:bg-white/10"
+        className="tap m-3 mt-3 flex items-center gap-3 rounded-xl bg-white/5 p-3 text-left transition-colors hover:bg-white/10"
       >
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-400 text-[11px] font-bold text-white">
           {user.inisial}
@@ -102,7 +92,7 @@ export default function Sidebar({ onNavigate }) {
           <p className="truncate text-[12.5px] font-semibold text-white">{user.nama}</p>
           <p className="truncate text-[10.5px] text-white/50">{user.role}</p>
         </div>
-        <LogOut size={15} className="shrink-0 text-white/40" />
+        <ChevronRight size={15} className="shrink-0 text-white/40" />
       </button>
     </aside>
   );

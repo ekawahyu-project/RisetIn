@@ -24,7 +24,7 @@ function KolaborasiMahasiswa() {
 
   return (
     <div>
-      <div className="mb-6 flex gap-5 border-b border-line">
+      <div className="mb-6 flex gap-5 border-b border-line dark:border-white/10">
         <TabBtn active={tab === "masuk"} onClick={() => setTab("masuk")}>
           Permintaan Masuk
         </TabBtn>
@@ -40,19 +40,19 @@ function KolaborasiMahasiswa() {
             const r = riset.find((x) => x.id === m.risetId);
             if (!r) return null;
             return (
-              <div key={m.id} className="fade-up rounded-2xl bg-white p-4 shadow-card">
+              <div key={m.id} className="fade-up rounded-2xl bg-white dark:bg-[#101f2e] p-4 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
                 <div className="flex items-center gap-2.5">
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">
                     {m.perusahaan.split(" ").slice(-1)[0][0]}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[13.5px] font-bold text-ink">{m.perusahaan}</p>
+                    <p className="truncate text-[13.5px] font-bold text-ink dark:text-white">{m.perusahaan}</p>
                     <p className="truncate text-[12px] text-sub">{m.pesan}</p>
                   </div>
                 </div>
-                <div className="mt-3 flex items-center gap-2 rounded-xl bg-sky-50 p-2.5">
+                <div className="mt-3 flex items-center gap-2 rounded-xl bg-sky-50 dark:bg-white/5 p-2.5">
                   <RisetThumb img={r.img} kategori={r.kategori} className="h-9 w-9 shrink-0 rounded-lg" />
-                  <p className="truncate text-[12px] font-medium text-ink">{r.judul}</p>
+                  <p className="truncate text-[12px] font-medium text-ink dark:text-white">{r.judul}</p>
                 </div>
                 <div className="mt-2 text-right text-[11px] text-brand-300">{m.waktu}</div>
                 <div className="mt-3 flex gap-2">
@@ -82,11 +82,11 @@ function KolaborasiMahasiswa() {
             const r = riset.find((x) => x.id === p.risetId);
             if (!r) return null;
             return (
-              <div key={p.id} className="fade-up rounded-2xl bg-white p-4 shadow-card">
+              <div key={p.id} className="fade-up rounded-2xl bg-white dark:bg-[#101f2e] p-4 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
                 <div className="flex items-center gap-3">
                   <RisetThumb img={r.img} kategori={r.kategori} className="h-12 w-12 shrink-0 rounded-xl" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[13.5px] font-bold text-ink">{r.judul}</p>
+                    <p className="truncate text-[13.5px] font-bold text-ink dark:text-white">{r.judul}</p>
                     <div className="mt-0.5 flex items-center gap-1 text-[12px] text-sub">
                       <Building2 size={12} /> {p.perusahaan}
                     </div>
@@ -97,7 +97,7 @@ function KolaborasiMahasiswa() {
                 <div className="mt-3 flex gap-2">
                   <button
                     onClick={() => navigate(`/kolaborasi/chat/${p.id}`)}
-                    className="tap flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-sky-100 py-2 text-[12.5px] font-bold text-brand-700"
+                    className="tap flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-sky-100 dark:bg-white/5 py-2 text-[12.5px] font-bold text-brand-700"
                   >
                     <MessageSquare size={14} /> Hubungi
                   </button>
@@ -124,7 +124,7 @@ function KolaborasiIndustri() {
 
   return (
     <div>
-      <div className="mb-6 flex gap-5 border-b border-line">
+      <div className="mb-6 flex gap-5 border-b border-line dark:border-white/10">
         <TabBtn active={tab === "pengajuan"} onClick={() => setTab("pengajuan")}>
           Pengajuan Kolaborasi
         </TabBtn>
@@ -139,11 +139,11 @@ function KolaborasiIndustri() {
             const r = riset.find((x) => x.id === p.risetId);
             if (!r) return null;
             return (
-              <div key={p.id} className="fade-up rounded-2xl bg-white p-4 shadow-card">
+              <div key={p.id} className="fade-up rounded-2xl bg-white dark:bg-[#101f2e] p-4 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
                 <div className="flex items-center gap-3">
                   <RisetThumb img={r.img} kategori={r.kategori} className="h-12 w-12 shrink-0 rounded-xl" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[13.5px] font-bold text-ink">{r.judul}</p>
+                    <p className="truncate text-[13.5px] font-bold text-ink dark:text-white">{r.judul}</p>
                     <div className="mt-0.5 flex items-center gap-1 text-[12px] text-sub">
                       <Building2 size={12} /> {p.kampus}
                     </div>
@@ -167,11 +167,11 @@ function KolaborasiIndustri() {
             const r = riset.find((x) => x.id === p.risetId);
             if (!r) return null;
             return (
-              <div key={p.id} className="fade-up rounded-2xl bg-white p-4 shadow-card">
+              <div key={p.id} className="fade-up rounded-2xl bg-white dark:bg-[#101f2e] p-4 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
                 <div className="flex items-center gap-3">
                   <RisetThumb img={r.img} kategori={r.kategori} className="h-12 w-12 shrink-0 rounded-xl" />
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[13.5px] font-bold text-ink">{r.judul}</p>
+                    <p className="truncate text-[13.5px] font-bold text-ink dark:text-white">{r.judul}</p>
                     <div className="mt-0.5 flex items-center gap-1 text-[12px] text-sub">
                       <Building2 size={12} /> {r.kampus}
                     </div>
@@ -181,7 +181,7 @@ function KolaborasiIndustri() {
                 <div className="mt-3 flex gap-2">
                   <button
                     onClick={() => navigate(`/kolaborasi/chat/${p.id}`)}
-                    className="tap flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-sky-100 py-2 text-[12.5px] font-bold text-brand-700"
+                    className="tap flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-sky-100 dark:bg-white/5 py-2 text-[12.5px] font-bold text-brand-700"
                   >
                     <MessageSquare size={14} /> Hubungi
                   </button>
@@ -205,8 +205,10 @@ function TabBtn({ active, onClick, children }) {
   return (
     <button
       onClick={onClick}
-      className={`tap -mb-px border-b-2 pb-3 text-[13.5px] font-semibold ${
-        active ? "border-brand-600 text-brand-700" : "border-transparent text-sub hover:text-ink"
+      className={`tap -mb-px border-b-2 pb-3 text-[13.5px] font-semibold transition-colors ${
+        active
+          ? "border-brand-600 text-brand-700 dark:border-brand-300 dark:text-brand-200"
+          : "border-transparent text-sub hover:text-ink dark:hover:text-white"
       }`}
     >
       {children}
@@ -217,7 +219,7 @@ function TabBtn({ active, onClick, children }) {
 function EmptyState({ text }) {
   return (
     <div className="col-span-full flex flex-col items-center py-16 text-center">
-      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-card">
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white dark:bg-[#101f2e] shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
         <Inbox size={26} className="text-brand-300" />
       </div>
       <p className="mt-3 text-[13px] text-sub">{text}</p>

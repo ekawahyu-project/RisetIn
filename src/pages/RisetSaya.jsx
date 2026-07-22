@@ -24,13 +24,15 @@ export default function RisetSaya() {
     <Container wide>
       <PageHeader title="Riset Saya" subtitle="Kelola dan pantau performa riset yang telah Anda unggah" />
 
-      <div className="mb-6 flex gap-2 overflow-x-auto border-b border-line">
+      <div className="mb-6 flex gap-2 overflow-x-auto border-b border-line dark:border-white/10">
         {tabs.map((t) => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`tap shrink-0 -mb-px border-b-2 px-3.5 py-2.5 text-[13.5px] font-semibold ${
-              tab === t.key ? "border-brand-600 text-brand-700" : "border-transparent text-sub hover:text-ink"
+            className={`tap shrink-0 -mb-px border-b-2 px-3.5 py-2.5 text-[13.5px] font-semibold transition-colors ${
+              tab === t.key
+                ? "border-brand-600 text-brand-700 dark:border-brand-300 dark:text-brand-200"
+                : "border-transparent text-sub hover:text-ink dark:hover:text-white"
             }`}
           >
             {t.label}
@@ -40,10 +42,10 @@ export default function RisetSaya() {
 
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center py-20 text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-card">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-card dark:bg-[#101f2e] dark:ring-1 dark:ring-white/5">
             <Package size={26} className="text-brand-300" />
           </div>
-          <p className="mt-3 text-sm font-semibold text-ink">Arsip Kosong :(</p>
+          <p className="mt-3 text-sm font-semibold text-ink dark:text-white">Arsip Kosong :(</p>
           <p className="mt-1 text-[12.5px] text-sub">Belum ada riset pada kategori ini.</p>
         </div>
       ) : (

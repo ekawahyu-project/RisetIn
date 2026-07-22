@@ -60,12 +60,12 @@ export default function UploadRiset() {
   if (published) {
     return (
       <Container>
-        <div className="mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl bg-white p-10 text-center shadow-card">
+        <div className="mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl bg-white dark:bg-[#101f2e] p-10 text-center shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
           <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-leaf/10 text-leaf">
             <CheckCircle2 size={30} />
           </div>
           <div>
-            <p className="text-[15px] font-bold text-ink">Berhasil!</p>
+            <p className="text-[15px] font-bold text-ink dark:text-white">Berhasil!</p>
             <p className="mt-1 text-[13px] text-sub">Riset berhasil diterbitkan.</p>
           </div>
           <button
@@ -84,28 +84,28 @@ export default function UploadRiset() {
       <PageHeader title="Upload Riset" back subtitle="Bagikan riset Anda dan jangkau industri yang tepat" />
 
       <div className="mx-auto max-w-2xl">
-        <div className="flex items-center justify-center gap-2 rounded-2xl bg-white p-4 shadow-card sm:gap-3">
+        <div className="flex items-center justify-center gap-2 rounded-2xl bg-white dark:bg-[#101f2e] p-4 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 sm:gap-3">
           {steps.map((s, i) => (
             <React.Fragment key={s}>
               <div className="flex flex-col items-center gap-1">
                 <div
                   className={`flex h-8 w-8 items-center justify-center rounded-full text-[12.5px] font-bold ${
-                    i + 1 <= step ? "bg-brand-600 text-white" : "bg-sky-100 text-brand-400"
+                    i + 1 <= step ? "bg-brand-600 text-white" : "bg-sky-100 dark:bg-white/5 text-brand-400"
                   }`}
                 >
                   {i + 1}
                 </div>
                 <span className={`text-[10.5px] font-medium ${i + 1 <= step ? "text-brand-700" : "text-sub"}`}>{s}</span>
               </div>
-              {i < steps.length - 1 && <div className={`h-0.5 w-8 rounded sm:w-14 ${i + 1 < step ? "bg-brand-600" : "bg-sky-100"}`} />}
+              {i < steps.length - 1 && <div className={`h-0.5 w-8 rounded sm:w-14 ${i + 1 < step ? "bg-brand-600" : "bg-sky-100 dark:bg-white/5"}`} />}
             </React.Fragment>
           ))}
         </div>
 
-        <div className="mt-5 rounded-2xl bg-white p-6 shadow-card sm:p-8">
+        <div className="mt-5 rounded-2xl bg-white dark:bg-[#101f2e] p-6 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 sm:p-8">
           {step === 1 && (
             <div className="fade-up space-y-4">
-              <h2 className="text-[15px] font-bold text-ink">Informasi Riset</h2>
+              <h2 className="text-[15px] font-bold text-ink dark:text-white">Informasi Riset</h2>
               <Field label="Judul Riset">
                 <input
                   value={form.judul}
@@ -155,14 +155,14 @@ export default function UploadRiset() {
 
           {step === 2 && (
             <div className="fade-up space-y-4">
-              <h2 className="text-[15px] font-bold text-ink">Dokumen</h2>
-              <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-brand-200 bg-sky-50 py-12 text-center">
+              <h2 className="text-[15px] font-bold text-ink dark:text-white">Dokumen</h2>
+              <label className="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-brand-200 bg-sky-50 dark:bg-white/5 py-12 text-center">
                 <UploadCloud size={28} className="text-brand-400" />
-                <p className="text-[13px] font-semibold text-ink">Klik untuk mengunggah, atau seret file ke sini</p>
+                <p className="text-[13px] font-semibold text-ink dark:text-white">Klik untuk mengunggah, atau seret file ke sini</p>
                 <p className="text-[11.5px] text-sub">Ukuran file maksimum 50MB</p>
                 <div className="mt-1 flex gap-1.5">
                   {["PNG", "JPG", "PDF"].map((t) => (
-                    <span key={t} className="rounded-md bg-white px-2 py-0.5 text-[10.5px] font-semibold text-brand-600 ring-1 ring-line">
+                    <span key={t} className="rounded-md bg-white dark:bg-[#101f2e] px-2 py-0.5 text-[10.5px] font-semibold text-brand-600 ring-1 ring-line dark:ring-white/10">
                       {t}
                     </span>
                   ))}
@@ -174,8 +174,8 @@ export default function UploadRiset() {
                 />
               </label>
               {form.fileName && (
-                <div className="flex items-center justify-between rounded-xl bg-sky-50 p-3.5">
-                  <span className="truncate text-[13px] text-ink">{form.fileName}</span>
+                <div className="flex items-center justify-between rounded-xl bg-sky-50 dark:bg-white/5 p-3.5">
+                  <span className="truncate text-[13px] text-ink dark:text-white">{form.fileName}</span>
                   <button onClick={() => set("fileName", "")} className="tap text-berry">
                     <Trash2 size={16} />
                   </button>
@@ -186,11 +186,11 @@ export default function UploadRiset() {
 
           {step === 3 && (
             <div className="fade-up space-y-4">
-              <h2 className="text-[15px] font-bold text-ink">Pengecekan Otomatis</h2>
+              <h2 className="text-[15px] font-bold text-ink dark:text-white">Pengecekan Otomatis</h2>
               <p className="text-[13px] leading-relaxed text-sub">
                 Mesin AI RisetIn akan mengekstraksi metadata riset Anda (abstrak, teknologi inti, potensi aplikasi) secara otomatis.
               </p>
-              <div className="rounded-2xl bg-sky-50 p-5">
+              <div className="rounded-2xl bg-sky-50 dark:bg-white/5 p-5">
                 {!checking && !checked && (
                   <button
                     onClick={runCheck}
@@ -219,20 +219,20 @@ export default function UploadRiset() {
 
           {step === 4 && (
             <div className="fade-up space-y-4">
-              <h2 className="text-[15px] font-bold text-ink">Pratinjau Publikasi</h2>
-              <div className="rounded-2xl bg-sky-50 p-4">
+              <h2 className="text-[15px] font-bold text-ink dark:text-white">Pratinjau Publikasi</h2>
+              <div className="rounded-2xl bg-sky-50 dark:bg-white/5 p-4">
                 <RisetThumb img="lms" kategori={form.kategori || "teknologi"} className="h-40 w-full rounded-xl" />
-                <p className="mt-3 text-[15px] font-bold text-ink">{form.judul || "Judul Riset Anda"}</p>
+                <p className="mt-3 text-[15px] font-bold text-ink dark:text-white">{form.judul || "Judul Riset Anda"}</p>
                 <p className="text-[12px] text-sub">Universitas Brawijaya</p>
-                <p className="mt-2 w-fit rounded-full bg-white px-2.5 py-0.5 text-[11.5px] font-semibold text-brand-600 ring-1 ring-line">
+                <p className="mt-2 w-fit rounded-full bg-white dark:bg-[#101f2e] px-2.5 py-0.5 text-[11.5px] font-semibold text-brand-600 ring-1 ring-line dark:ring-white/10">
                   Lisensi: {form.lisensi}
                 </p>
-                <p className="mt-3 text-[13px] leading-relaxed text-ink/80">
+                <p className="mt-3 text-[13px] leading-relaxed text-ink/80 dark:text-white/75">
                   {form.deskripsi ||
                     "Sistem irigasi otomatis yang dapat memonitor kelembapan tanah dan cuaca secara real-time menggunakan sensor IoT untuk efisiensi penggunaan air."}
                 </p>
-                <p className="mt-3 text-[13px] font-bold text-ink">Manfaat</p>
-                <ul className="mt-1 list-disc pl-4 text-[13px] text-ink/80">
+                <p className="mt-3 text-[13px] font-bold text-ink dark:text-white">Manfaat</p>
+                <ul className="mt-1 list-disc pl-4 text-[13px] text-ink/80 dark:text-white/75">
                   <li>Meningkatkan hasil panen</li>
                 </ul>
               </div>
@@ -243,7 +243,7 @@ export default function UploadRiset() {
             {step > 1 && (
               <button
                 onClick={() => setStep((s) => Math.max(s - 1, 1))}
-                className="tap rounded-xl bg-sky-100 px-5 py-3 text-[13px] font-bold text-brand-700"
+                className="tap rounded-xl bg-sky-100 dark:bg-white/5 px-5 py-3 text-[13px] font-bold text-brand-700"
               >
                 Kembali
               </button>
@@ -273,7 +273,7 @@ export default function UploadRiset() {
 function Field({ label, children }) {
   return (
     <div>
-      <label className="mb-1.5 block text-[13px] font-semibold text-ink">{label}</label>
+      <label className="mb-1.5 block text-[13px] font-semibold text-ink dark:text-white">{label}</label>
       {children}
     </div>
   );
@@ -281,7 +281,7 @@ function Field({ label, children }) {
 
 function CheckRow({ label }) {
   return (
-    <div className="flex items-center gap-2 text-[13px] text-ink">
+    <div className="flex items-center gap-2 text-[13px] text-ink dark:text-white">
       <CheckCircle2 size={16} className="text-leaf" />
       {label}
     </div>
