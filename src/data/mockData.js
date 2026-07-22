@@ -187,7 +187,7 @@ export const risetList = [
     tahap: "Gagasan murni",
     status: "draf",
     img: "lms",
-    imgUrl: null,
+    imgUrl: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop&q=80",
     ringkasan:
       "Platform pembelajaran daring yang memungkinkan interaksi materi lewat perintah suara untuk meningkatkan aksesibilitas belajar, terutama bagi penyandang disabilitas.",
     manfaat: ["Aksesibilitas belajar lebih inklusif", "Navigasi materi tanpa mengetik"],

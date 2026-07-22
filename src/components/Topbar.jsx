@@ -38,13 +38,13 @@ function LogoutModal({ onConfirm, onCancel }) {
               className="tap flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-500 py-3.5 text-[14px] font-bold text-white shadow-lg shadow-red-500/25 transition-all hover:shadow-red-500/40"
             >
               <LogOut size={16} />
-              Ya, Keluar
+              Keluar
             </button>
             <button
               onClick={onCancel}
               className="tap flex w-full items-center justify-center rounded-xl bg-sky-50 dark:bg-white/5 py-3.5 text-[14px] font-semibold text-ink dark:text-white/80 transition-all hover:bg-sky-100 dark:hover:bg-white/10"
             >
-              Batal, Tetap di Sini
+              Batal
             </button>
           </div>
         </div>

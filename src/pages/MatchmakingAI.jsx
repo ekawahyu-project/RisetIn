@@ -73,7 +73,9 @@ export default function MatchmakingAI() {
                           onClick={() => navigate(`/riset/${r.id}`)}
                           className="tap flex w-full items-center gap-3 rounded-2xl bg-sky-50 dark:bg-white/5 p-3 text-left"
                         >
-                          <RisetThumb img={r.img} kategori={r.kategori} className="h-14 w-14 shrink-0 rounded-xl" />
+                          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl">
+                            <RisetThumb img={r.img} imgUrl={r.imgUrl} kategori={r.kategori} className="h-full w-full" />
+                          </div>
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-[12.5px] font-semibold text-ink dark:text-white">{r.judul}</p>
                             <p className="truncate text-[11px] text-sub">{r.kampus}</p>

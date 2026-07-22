@@ -203,7 +203,7 @@ export default function Riset() {
         {list.length === 0 ? (
           <p className="mt-10 text-center text-[13px] text-sub">Tidak ada riset yang cocok.</p>
         ) : (
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 items-stretch sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {list.map((r) => (
               <RisetCardGrid key={r.id} r={r} />
             ))}

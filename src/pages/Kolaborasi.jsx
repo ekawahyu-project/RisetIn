@@ -51,7 +51,9 @@ function KolaborasiMahasiswa() {
                   </div>
                 </div>
                 <div className="mt-3 flex items-center gap-2 rounded-xl bg-sky-50 dark:bg-white/5 p-2.5">
-                  <RisetThumb img={r.img} kategori={r.kategori} className="h-9 w-9 shrink-0 rounded-lg" />
+                  <div className="h-9 w-9 shrink-0 overflow-hidden rounded-lg">
+                    <RisetThumb img={r.img} imgUrl={r.imgUrl} kategori={r.kategori} className="h-full w-full" />
+                  </div>
                   <p className="truncate text-[12px] font-medium text-ink dark:text-white">{r.judul}</p>
                 </div>
                 <div className="mt-2 text-right text-[11px] text-brand-300">{m.waktu}</div>
@@ -84,7 +86,9 @@ function KolaborasiMahasiswa() {
             return (
               <div key={p.id} className="fade-up rounded-2xl bg-white dark:bg-[#101f2e] p-4 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
                 <div className="flex items-center gap-3">
-                  <RisetThumb img={r.img} kategori={r.kategori} className="h-12 w-12 shrink-0 rounded-xl" />
+                  <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl">
+                    <RisetThumb img={r.img} imgUrl={r.imgUrl} kategori={r.kategori} className="h-full w-full" />
+                  </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[13.5px] font-bold text-ink dark:text-white">{r.judul}</p>
                     <div className="mt-0.5 flex items-center gap-1 text-[12px] text-sub">
@@ -141,7 +145,9 @@ function KolaborasiIndustri() {
             return (
               <div key={p.id} className="fade-up rounded-2xl bg-white dark:bg-[#101f2e] p-4 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
                 <div className="flex items-center gap-3">
-                  <RisetThumb img={r.img} kategori={r.kategori} className="h-12 w-12 shrink-0 rounded-xl" />
+                  <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl">
+                    <RisetThumb img={r.img} imgUrl={r.imgUrl} kategori={r.kategori} className="h-full w-full" />
+                  </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[13.5px] font-bold text-ink dark:text-white">{r.judul}</p>
                     <div className="mt-0.5 flex items-center gap-1 text-[12px] text-sub">
@@ -169,7 +175,9 @@ function KolaborasiIndustri() {
             return (
               <div key={p.id} className="fade-up rounded-2xl bg-white dark:bg-[#101f2e] p-4 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
                 <div className="flex items-center gap-3">
-                  <RisetThumb img={r.img} kategori={r.kategori} className="h-12 w-12 shrink-0 rounded-xl" />
+                  <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl">
+                    <RisetThumb img={r.img} imgUrl={r.imgUrl} kategori={r.kategori} className="h-full w-full" />
+                  </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[13.5px] font-bold text-ink dark:text-white">{r.judul}</p>
                     <div className="mt-0.5 flex items-center gap-1 text-[12px] text-sub">

@@ -10,7 +10,7 @@ function StatCard({ icon: Icon, label, value, onClick, delay = 0 }) {
     <button
       onClick={onClick}
       style={{ animationDelay: `${delay}ms` }}
-      className="tap lift fade-up rounded-2xl bg-white p-4 text-left shadow-card dark:bg-[#101f2e] dark:shadow-none dark:ring-1 dark:ring-white/5 sm:p-5"
+      className="stat-lift fade-up w-full rounded-2xl bg-white p-4 text-left shadow-card dark:bg-[#101f2e] dark:shadow-none dark:ring-1 dark:ring-white/5 sm:p-5 cursor-pointer"
     >
       <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-brand-600 dark:bg-white/10 dark:text-brand-300">
         <Icon size={18} />
@@ -62,7 +62,7 @@ export default function Beranda() {
               Lihat semua <ChevronRight size={15} />
             </button>
           </div>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-4 items-stretch sm:grid-cols-3 lg:grid-cols-4">
             {terbaru.map((r) => (
               <RisetCardGrid key={r.id} r={r} />
             ))}
@@ -112,7 +112,7 @@ export default function Beranda() {
             Lihat semua <ChevronRight size={15} />
           </button>
         </div>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 items-stretch sm:grid-cols-3 lg:grid-cols-4">
           {risetTerbaru.map((r) => (
             <RisetCardGrid key={r.id} r={r} />
           ))}

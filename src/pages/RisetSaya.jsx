@@ -49,7 +49,7 @@ export default function RisetSaya() {
           <p className="mt-1 text-[12.5px] text-sub">Belum ada riset pada kategori ini.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 items-stretch sm:grid-cols-3 lg:grid-cols-4">
           {filtered.map((r) => (
             <RisetCardGrid key={r.id} r={r} />
           ))}

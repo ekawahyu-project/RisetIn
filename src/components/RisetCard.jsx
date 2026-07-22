@@ -2,15 +2,16 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, MessageCircle, Heart, Building2 } from "lucide-react";
 import RisetThumb from "./RisetThumb";
-import { CategoryBadge } from "./Badge";
+import { CategoryBadge, CategoryBadgeOnImage } from "./Badge";
 import { useApp } from "../context/AppContext";
+
 
 export function RisetCardWide({ r, subtitle }) {
   const navigate = useNavigate();
   return (
     <button
       onClick={() => navigate(`/riset/${r.id}`)}
-      className="tap lift flex w-full items-center gap-3 rounded-2xl bg-white p-2.5 text-left shadow-card dark:bg-[#101f2e] transition-all duration-300"
+      className="tap flex w-full items-center gap-3 rounded-2xl bg-white p-2.5 text-left shadow-card dark:bg-[#101f2e] hover:bg-sky-50 dark:hover:bg-white/5 transition-colors"
     >
       <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl">
         <RisetThumb img={r.img} imgUrl={r.imgUrl} kategori={r.kategori} className="h-full w-full" />
@@ -48,34 +49,40 @@ export function RisetCardGrid({ r }) {
       tabIndex={0}
       onClick={openDetail}
       onKeyDown={(e) => e.key === "Enter" && openDetail()}
-      className="group riset-card fade-up w-full cursor-pointer shadow-card dark:shadow-none"
+      /* flex-col + h-full agar semua card sama tinggi, stats selalu di bawah */
+      className="group riset-card fade-up flex h-full w-full cursor-pointer flex-col shadow-card dark:shadow-none"
     >
-      {/* Image / Thumbnail */}
-      <div className="relative overflow-hidden rounded-t-[1.15rem]" style={{ aspectRatio: "16/9" }}>
+      {/* Gambar — aspect ratio 16/9 fixed */}
+      <div className="relative shrink-0 overflow-hidden rounded-t-[1.15rem]" style={{ aspectRatio: "16/9" }}>
         <RisetThumb
           img={r.img}
           imgUrl={r.imgUrl}
           kategori={r.kategori}
           className="h-full w-full transition-transform duration-500 ease-out group-hover:scale-105"
         />
-        {/* Category badge on top of image */}
+        {/* Badge kategori berwarna di atas foto */}
         <div className="absolute top-2 left-2">
-          <CategoryBadge kategori={r.kategori} />
+          <CategoryBadgeOnImage kategori={r.kategori} />
         </div>
       </div>
 
-      {/* Card body */}
-      <div className="p-3">
-        <p className="line-clamp-2 text-[13px] font-semibold leading-snug text-ink dark:text-white">
+      {/* Body — flex-col, stats di-push ke bawah dengan mt-auto */}
+      <div className="flex flex-1 flex-col p-3">
+        {/* Judul — selalu 2 baris agar tinggi konsisten */}
+        <p
+          className="line-clamp-2 min-h-[2.5rem] text-[13px] font-semibold leading-snug text-ink dark:text-white"
+        >
           {r.judul}
         </p>
+
+        {/* Kampus */}
         <div className="mt-1.5 flex items-center gap-1 text-[11px] text-sub">
           <Building2 size={10} className="shrink-0" />
           <span className="truncate">{r.kampus}</span>
         </div>
 
-        {/* Stats */}
-        <div className="mt-2.5 flex items-center gap-3 border-t border-line pt-2 text-[10.5px] text-sub dark:border-white/10">
+        {/* Stats — mt-auto mendorong ke bawah agar selalu rata-bawah */}
+        <div className="mt-auto flex items-center gap-3 border-t border-line pt-2 text-[10.5px] text-sub dark:border-white/10" style={{ marginTop: "auto", paddingTop: "0.5rem" }}>
           <span className="inline-flex items-center gap-1">
             <Eye size={11} /> {r.views}
           </span>

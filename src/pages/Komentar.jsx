@@ -39,7 +39,9 @@ export default function Komentar() {
           onClick={() => navigate(`/riset/${r.id}`)}
           className="tap lift flex w-full items-center gap-3 rounded-2xl bg-white p-3 text-left shadow-card dark:bg-[#101f2e]"
         >
-          <RisetThumb img={r.img} kategori={r.kategori} className="h-12 w-12 shrink-0 rounded-xl" />
+          <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl">
+            <RisetThumb img={r.img} imgUrl={r.imgUrl} kategori={r.kategori} className="h-full w-full" />
+          </div>
           <div className="min-w-0">
             <p className="truncate text-[13px] font-semibold text-ink dark:text-white">{r.judul}</p>
             <p className="truncate text-[11.5px] text-sub">{r.kampus}</p>

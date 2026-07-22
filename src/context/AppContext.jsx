@@ -25,7 +25,14 @@ export function AppProvider({ children }) {
   const [role, setRole] = useState("mahasiswa"); // "mahasiswa" | "industri"
   const [theme, setTheme] = useState(getInitialTheme);
 
-  const [riset, setRiset] = useState(() => risetList.map((r) => ({ ...r, liked: false })));
+  const [riset, setRiset] = useState(() =>
+    risetList.map((r) => ({
+      ...r,
+      liked: false,
+      // pakai jumlah komentar aktual dari commentsSeed, default 0
+      komentar: commentsSeed[r.id]?.length ?? 0,
+    }))
+  );
   const [comments, setComments] = useState(commentsSeed);
   const [notifications, setNotifications] = useState(notifSeed);
   const [masuk, setMasuk] = useState(collaborationsMasuk);

@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Home, Search, Users, Sparkles, UploadCloud, FlaskConical, ChevronRight } from "lucide-react";
+import { Home, Search, Users, UploadCloud, FlaskConical, Sparkles, ChevronRight } from "lucide-react";
 import { useApp } from "../context/AppContext";
 
 export default function Sidebar({ onNavigate }) {
@@ -25,32 +25,22 @@ export default function Sidebar({ onNavigate }) {
   return (
     <aside className="flex h-full w-full flex-col bg-gradient-to-b from-brand-800 to-brand-900 text-white">
       <div className="flex items-center gap-2.5 px-6 py-6">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-lg font-black">R</div>
+        <img src="/logo-risetin.png" alt="RisetIn" className="h-9 w-9 rounded-xl object-contain" />
         <div>
           <p className="text-[16px] font-extrabold leading-none">RisetIn</p>
           <p className="text-[10.5px] text-white/50">Riset × Industri</p>
         </div>
       </div>
 
-      {role === "mahasiswa" ? (
+      {role === "mahasiswa" && (
         <button
           onClick={() => {
             navigate("/upload");
             onNavigate?.();
           }}
-          className="tap lift mx-4 mb-2 flex items-center justify-center gap-2 rounded-xl bg-white py-2.5 text-[13px] font-bold text-brand-700 shadow-soft hover:shadow-lg"
+          className="tap mx-4 mb-2 flex items-center justify-center gap-2 rounded-xl bg-white py-2.5 text-[13px] font-bold text-brand-700 shadow-soft hover:shadow-md transition-shadow"
         >
           <UploadCloud size={16} /> Upload Riset
-        </button>
-      ) : (
-        <button
-          onClick={() => {
-            navigate("/matchmaking");
-            onNavigate?.();
-          }}
-          className="tap lift mx-4 mb-2 flex items-center justify-center gap-2 rounded-xl bg-white py-2.5 text-[13px] font-bold text-brand-700 shadow-soft hover:shadow-lg"
-        >
-          <Sparkles size={16} /> Matchmaking AI
         </button>
       )}
 

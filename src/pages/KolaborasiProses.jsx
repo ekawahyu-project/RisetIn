@@ -31,7 +31,9 @@ export default function KolaborasiProses() {
         <div className="lg:col-span-1">
           <div className="rounded-2xl bg-white dark:bg-[#101f2e] p-5 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
             <div className="flex items-center gap-3">
-              <RisetThumb img={r.img} kategori={r.kategori} className="h-14 w-14 shrink-0 rounded-xl" />
+              <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl">
+                <RisetThumb img={r.img} imgUrl={r.imgUrl} kategori={r.kategori} className="h-full w-full" />
+              </div>
               <div className="min-w-0">
                 <p className="truncate text-[13.5px] font-bold text-ink dark:text-white">{r.judul}</p>
                 <p className="truncate text-[12px] text-sub">{r.kampus}</p>
