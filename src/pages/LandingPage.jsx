@@ -334,13 +334,6 @@ export default function LandingPage() {
               Sudah punya akun? Masuk
             </button>
           </div>
-
-          <div className={`fade-up stagger-4 mt-14 flex flex-wrap items-center justify-center gap-6 text-[12px] ${isDark ? "text-white/35" : "text-gray-400"}`}>
-            <span className="flex items-center gap-1.5"><CheckCircle2 size={13} className="text-emerald-500" /> Gratis untuk mahasiswa</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 size={13} className="text-emerald-500" /> AI-powered matchmaking</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 size={13} className="text-emerald-500" /> IP terlindungi</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 size={13} className="text-emerald-500" /> 380+ kampus partner</span>
-          </div>
         </div>
       </section>
 
@@ -427,29 +420,6 @@ export default function LandingPage() {
                 </div>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ========== CATEGORIES ========== */}
-      <section id="kategori" className="py-20">
-        <div className="mx-auto max-w-5xl px-6 text-center">
-          <span className="section-label mb-3 block text-brand-500">Kategori Riset</span>
-          <h2 className={`text-3xl font-black lg:text-4xl ${isDark ? "text-white" : "text-gray-900"}`}>
-            Jelajahi Riset dari{" "}
-            <span className="gradient-text">Berbagai Bidang</span>
-          </h2>
-          <p className={`mx-auto mt-4 max-w-md text-[14px] ${isDark ? "text-white/50" : "text-gray-500"}`}>
-            Dari pertanian hingga teknologi AI, ekosistem RisetIn mencakup seluruh spektrum inovasi kampus Indonesia.
-          </p>
-
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            {categoryPills.map((c) => (
-              <div key={c.label} className={`flex items-center gap-2 rounded-full border px-5 py-2.5 text-[13px] font-semibold ${c.color} transition-all hover:scale-105 cursor-default`}>
-                <c.icon size={15} />
-                {c.label}
-              </div>
-            ))}
           </div>
         </div>
       </section>
