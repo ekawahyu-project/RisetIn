@@ -1,21 +1,18 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, FlaskConical, Users2, Eye, CheckCircle2, Sparkles, UploadCloud, BookOpen } from "lucide-react";
+import { ChevronRight, Sparkles, UploadCloud } from "lucide-react";
 import { useApp } from "../context/AppContext";
 import { RisetCardGrid } from "../components/RisetCard";
 import Container from "../components/Container";
 
-function StatCard({ icon: Icon, label, value, onClick, delay = 0 }) {
+function StatCard({ label, value, onClick, delay = 0 }) {
   return (
     <button
       onClick={onClick}
       style={{ animationDelay: `${delay}ms` }}
       className="stat-lift fade-up w-full rounded-2xl bg-white p-4 text-left shadow-card dark:bg-[#101f2e] dark:shadow-none dark:ring-1 dark:ring-white/5 sm:p-5 cursor-pointer"
     >
-      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-brand-600 dark:bg-white/10 dark:text-brand-300">
-        <Icon size={18} />
-      </div>
-      <p className="mt-3 text-2xl font-extrabold text-ink dark:text-white">{value}</p>
+      <p className="text-2xl font-extrabold text-ink dark:text-white">{value}</p>
       <p className="text-[12.5px] text-sub">{label}</p>
     </button>
   );
@@ -46,10 +43,10 @@ export default function Beranda() {
         </div>
 
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <StatCard icon={FlaskConical} label="Kebutuhan Aktif" value={user.stats.kebutuhan} onClick={() => navigate("/kolaborasi")} delay={0} />
-          <StatCard icon={Users2} label="Kolaborasi" value={user.stats.kolaborasi} onClick={() => navigate("/kolaborasi")} delay={40} />
-          <StatCard icon={BookOpen} label="Total Riset" value={riset.filter(r => r.status === "diterbitkan").length} onClick={() => navigate("/riset")} delay={80} />
-          <StatCard icon={CheckCircle2} label="Diadopsi" value={user.stats.diadopsi} delay={120} />
+          <StatCard label="Kebutuhan Aktif" value={user.stats.kebutuhan} onClick={() => navigate("/kolaborasi")} delay={0} />
+          <StatCard label="Kolaborasi" value={user.stats.kolaborasi} onClick={() => navigate("/kolaborasi")} delay={40} />
+          <StatCard label="Total Riset" value={riset.filter(r => r.status === "diterbitkan").length} onClick={() => navigate("/riset")} delay={80} />
+          <StatCard label="Diadopsi" value={user.stats.diadopsi} delay={120} />
         </div>
 
         <div className="mt-8">
@@ -96,10 +93,10 @@ export default function Beranda() {
       </div>
 
       <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <StatCard icon={FlaskConical} label="Riset Saya" value={user.stats.riset} onClick={() => navigate("/riset-saya")} delay={0} />
-        <StatCard icon={Users2} label="Kolaborasi Aktif" value={user.stats.kolaborasi} onClick={() => navigate("/kolaborasi")} delay={40} />
-        <StatCard icon={Eye} label="Pengunjung" value={user.stats.pengunjung} delay={80} />
-        <StatCard icon={CheckCircle2} label="Diadopsi" value={user.stats.diadopsi} onClick={() => navigate("/riset-saya")} delay={120} />
+        <StatCard label="Riset Saya" value={user.stats.riset} onClick={() => navigate("/riset-saya")} delay={0} />
+        <StatCard label="Kolaborasi Aktif" value={user.stats.kolaborasi} onClick={() => navigate("/kolaborasi")} delay={40} />
+        <StatCard label="Pengunjung" value={user.stats.pengunjung} delay={80} />
+        <StatCard label="Diadopsi" value={user.stats.diadopsi} onClick={() => navigate("/riset-saya")} delay={120} />
       </div>
 
       <div className="mt-8">

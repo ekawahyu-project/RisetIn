@@ -15,6 +15,7 @@ export default function UploadRiset() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({
     judul: "",
+    institusi: "",
     kategori: "",
     tahap: "",
     deskripsi: "",
@@ -55,7 +56,7 @@ export default function UploadRiset() {
     addRiset({
       id: "r" + Date.now(),
       judul: form.judul || "Riset Tanpa Judul",
-      kampus: "Universitas Brawijaya",
+      kampus: form.institusi || "Universitas Brawijaya",
       kategori,
       lisensi: form.lisensi,
       views: 0,
@@ -96,10 +97,10 @@ export default function UploadRiset() {
   }
 
   return (
-    <Container>
+    <Container wide>
       <PageHeader title="Upload Riset" back subtitle="Bagikan riset Anda dan jangkau industri yang tepat" />
 
-      <div className="mx-auto max-w-2xl">
+      <div className="w-full">
         {/* Step indicator */}
         <div className="flex items-center justify-center gap-2 rounded-2xl bg-white dark:bg-[#101f2e] p-4 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 sm:gap-3">
           {steps.map((s, i) => (
@@ -136,6 +137,15 @@ export default function UploadRiset() {
                   value={form.judul}
                   onChange={(e) => set("judul", e.target.value)}
                   placeholder="Masukkan judul riset"
+                  className="input"
+                />
+              </Field>
+
+              <Field label="Institusi / Universitas">
+                <input
+                  value={form.institusi}
+                  onChange={(e) => set("institusi", e.target.value)}
+                  placeholder="Contoh: Universitas Brawijaya"
                   className="input"
                 />
               </Field>

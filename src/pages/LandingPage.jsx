@@ -99,18 +99,21 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
     }, 650);
   };
 
+  const inputCls =
+    "w-full rounded-xl bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 px-4 py-3 text-[13.5px] text-ink dark:text-white placeholder-gray-400 dark:placeholder-white/25 outline-none focus:border-brand-400 dark:focus:border-brand-400 focus:ring-2 focus:ring-brand-400/20 transition-all font-['Inter']";
+
   return (
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal-box relative w-full max-w-md rounded-3xl bg-[#0a1928] ring-1 ring-white/10 shadow-2xl overflow-hidden">
+      <div className="modal-box relative w-full max-w-md rounded-3xl bg-white dark:bg-[#0a1928] ring-1 ring-black/8 dark:ring-white/10 shadow-2xl overflow-hidden">
         {/* Decorative glow */}
-        <div className="pointer-events-none absolute -top-20 -right-20 h-48 w-48 rounded-full bg-cyan-500/20 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-10 -left-10 h-36 w-36 rounded-full bg-brand-600/20 blur-3xl" />
+        <div className="pointer-events-none absolute -top-20 -right-20 h-48 w-48 rounded-full bg-cyan-500/10 dark:bg-cyan-500/20 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-10 -left-10 h-36 w-36 rounded-full bg-brand-600/10 dark:bg-brand-600/20 blur-3xl" />
 
         <div className="relative p-8">
           {/* Close */}
           <button
             onClick={onClose}
-            className="tap absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition-colors"
+            className="tap absolute right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-white/70 hover:bg-gray-200 dark:hover:bg-white/20 hover:text-ink dark:hover:text-white transition-colors"
           >
             <X size={16} />
           </button>
@@ -118,11 +121,11 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
           {/* Logo */}
           <div className="mb-6 flex items-center gap-2.5">
             <img src="/logo-risetin.png" alt="RisetIn" className="h-9 w-9 rounded-xl object-contain" />
-            <span className="text-[17px] font-extrabold text-white tracking-tight">RisetIn</span>
+            <span className="text-[17px] font-extrabold text-ink dark:text-white tracking-tight">RisetIn</span>
           </div>
 
           {/* Tab */}
-          <div className="mb-7 flex gap-1 rounded-xl bg-white/5 p-1 ring-1 ring-white/10">
+          <div className="mb-7 flex gap-1 rounded-xl bg-gray-100 dark:bg-white/5 p-1 ring-1 ring-gray-200 dark:ring-white/10">
             {["login", "register"].map((m) => (
               <button
                 key={m}
@@ -130,7 +133,7 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
                 className={`flex-1 rounded-lg py-2.5 text-[13px] font-semibold transition-all duration-200 ${
                   mode === m
                     ? "bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-md"
-                    : "text-white/50 hover:text-white/80"
+                    : "text-gray-500 dark:text-white/50 hover:text-ink dark:hover:text-white/80"
                 }`}
               >
                 {m === "login" ? "Masuk" : "Daftar"}
@@ -138,30 +141,30 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
             ))}
           </div>
 
-          <h2 className="text-[22px] font-extrabold text-white tracking-tight leading-tight">
+          <h2 className="text-[22px] font-extrabold text-ink dark:text-white tracking-tight leading-tight">
             {mode === "login" ? "Selamat datang kembali 👋" : "Bergabung dengan RisetIn"}
           </h2>
-          <p className="mt-1.5 text-[13px] text-white/50">
+          <p className="mt-1.5 text-[13px] text-sub dark:text-white/50">
             {mode === "login" ? "Masuk dan lanjutkan perjalanan riset Anda." : "Mulai jelajahi ekosistem riset & industri Indonesia."}
           </p>
 
           <form onSubmit={submit} className="mt-6 space-y-4">
             {mode === "register" && (
               <div className="fade-up">
-                <label className="mb-2 block text-[12px] font-semibold uppercase tracking-widest text-white/40">
+                <label className="mb-2 block text-[12px] font-semibold uppercase tracking-widest text-gray-500 dark:text-white/40">
                   Nama Lengkap / Perusahaan
                 </label>
                 <input
                   value={nama}
                   onChange={(e) => setNama(e.target.value)}
                   placeholder="Masukkan nama"
-                  className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-[13.5px] text-white placeholder-white/25 outline-none focus:border-brand-400 focus:bg-white/8 focus:ring-2 focus:ring-brand-400/20 transition-all font-['Inter']"
+                  className={inputCls}
                 />
               </div>
             )}
 
             <div>
-              <label className="mb-2 block text-[12px] font-semibold uppercase tracking-widest text-white/40">
+              <label className="mb-2 block text-[12px] font-semibold uppercase tracking-widest text-gray-500 dark:text-white/40">
                 Alamat Email
               </label>
               <input
@@ -169,12 +172,12 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="nama@email.com"
-                className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-[13.5px] text-white placeholder-white/25 outline-none focus:border-brand-400 focus:bg-white/8 focus:ring-2 focus:ring-brand-400/20 transition-all font-['Inter']"
+                className={inputCls}
               />
             </div>
 
             <div>
-              <label className="mb-2 block text-[12px] font-semibold uppercase tracking-widest text-white/40">
+              <label className="mb-2 block text-[12px] font-semibold uppercase tracking-widest text-gray-500 dark:text-white/40">
                 Kata Sandi
               </label>
               <div className="relative">
@@ -183,12 +186,12 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Minimal 8 karakter"
-                  className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 pr-12 text-[13.5px] text-white placeholder-white/25 outline-none focus:border-brand-400 focus:bg-white/8 focus:ring-2 focus:ring-brand-400/20 transition-all font-['Inter']"
+                  className={`${inputCls} pr-12`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPw((v) => !v)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/70 transition-colors"
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-white/30 hover:text-gray-600 dark:hover:text-white/70 transition-colors"
                 >
                   {showPw ? (
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
@@ -200,7 +203,7 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
             </div>
 
             {email && (
-              <div className="fade-up flex items-center gap-2 rounded-xl bg-brand-500/10 border border-brand-500/20 px-3.5 py-2.5 text-[12px] text-brand-300">
+              <div className="fade-up flex items-center gap-2 rounded-xl bg-brand-50 dark:bg-brand-500/10 border border-brand-200 dark:border-brand-500/20 px-3.5 py-2.5 text-[12px] text-brand-700 dark:text-brand-300">
                 <Sparkles size={13} className="shrink-0" />
                 Terdeteksi masuk sebagai <b>{isIndustri ? "Industri" : "Mahasiswa"}</b>
                 {isIndustri ? <Building2 size={13} className="ml-auto shrink-0" /> : <FlaskConical size={13} className="ml-auto shrink-0" />}
@@ -223,8 +226,8 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
             </button>
           </form>
 
-          <p className="mt-5 text-center text-[11.5px] text-white/30">
-            Demo: email berisi <b className="text-white/50">"industri"</b> → akun Industri. Lainnya → Mahasiswa.
+          <p className="mt-5 text-center text-[11.5px] text-gray-400 dark:text-white/30">
+            Demo: email berisi <b className="text-gray-600 dark:text-white/50">"industri"</b> → akun Industri. Lainnya → Mahasiswa.
           </p>
         </div>
       </div>

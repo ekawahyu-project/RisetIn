@@ -32,7 +32,7 @@ export default function Chat() {
 
   return (
     <Container>
-      <div className="mx-auto flex h-[calc(100vh-9rem)] max-w-3xl flex-col overflow-hidden rounded-2xl bg-white dark:bg-[#101f2e] shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 lg:h-[calc(100vh-7rem)]">
+      <div className="mx-auto flex h-[calc(100vh-9rem)] w-full flex-col overflow-hidden rounded-2xl bg-white dark:bg-[#101f2e] shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 lg:h-[calc(100vh-7rem)]">
         <div className="flex shrink-0 items-center gap-3 border-b border-line dark:border-white/10 px-4 py-3.5">
           <button onClick={() => navigate(-1)} className="tap flex h-8 w-8 items-center justify-center rounded-full hover:bg-sky-100 dark:hover:bg-white/10">
             <ChevronLeft size={19} />

@@ -28,9 +28,9 @@ const items = [
 
 export default function Pengaturan() {
   return (
-    <Container>
+    <Container wide>
       <PageHeader title="Pengaturan" back />
-      <div className="grid gap-3 rounded-2xl bg-white dark:bg-[#101f2e] p-3 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 sm:grid-cols-2 sm:p-4">
+      <div className="grid gap-3 w-full rounded-2xl bg-white dark:bg-[#101f2e] p-3 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 sm:grid-cols-2 sm:p-4">
         {items.map((it) => (
           <button key={it.label} className="tap flex items-center gap-3 rounded-xl px-3 py-3.5 text-left hover:bg-sky-50 dark:hover:bg-white/10">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 dark:bg-white/5 text-brand-600">

@@ -139,9 +139,9 @@ export default function DetailRiset() {
               {tab === "Anggota" && (
                 <div className="fade-up grid gap-2.5 sm:grid-cols-2">
                   {[
-                    { n: "Eka Wahyu M", role: "Peneliti Utama" },
-                    { n: "Cia Rahmawati", role: "Anggota Peneliti" },
-                    { n: "Rezha Pratama", role: "Anggota Peneliti" },
+                    { n: "Eka Wahyu Maulidan", role: "Ketua Peneliti" },
+                    { n: "Aisyah Berlianti Afriandi", role: "Anggota Peneliti" },
+                    { n: "Rezha Anugrah Putra", role: "Anggota Peneliti" },
                   ].map((m, i) => (
                     <div key={i} className="flex items-center gap-3 rounded-xl bg-sky-50 p-3.5 dark:bg-white/5">
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-600 text-[12px] font-bold text-white">

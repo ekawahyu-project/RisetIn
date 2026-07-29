@@ -12,10 +12,10 @@ export default function EditProfil() {
   const [bio, setBio] = useState(user.bio);
 
   return (
-    <Container>
+    <Container wide>
       <PageHeader title="Edit Profil" back />
 
-      <div className="mx-auto max-w-2xl rounded-2xl bg-white dark:bg-[#101f2e] p-6 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 sm:p-8">
+      <div className="w-full rounded-2xl bg-white dark:bg-[#101f2e] p-6 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 sm:p-8">
         <div className="flex flex-col items-center">
           <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-brand-600 text-xl font-bold text-white">
             {user.inisial}

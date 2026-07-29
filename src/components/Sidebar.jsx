@@ -23,12 +23,12 @@ export default function Sidebar({ onNavigate }) {
         ];
 
   return (
-    <aside className="flex h-full w-full flex-col bg-gradient-to-b from-brand-800 to-brand-900 text-white">
+    <aside className="flex h-full w-full flex-col bg-white dark:bg-gradient-to-b dark:from-brand-800 dark:to-brand-900 border-r border-gray-100 dark:border-transparent">
       <div className="flex items-center gap-2.5 px-6 py-6">
         <img src="/logo-risetin.png" alt="RisetIn" className="h-9 w-9 rounded-xl object-contain" />
         <div>
-          <p className="text-[16px] font-extrabold leading-none">RisetIn</p>
-          <p className="text-[10.5px] text-white/50">Riset × Industri</p>
+          <p className="text-[16px] font-extrabold leading-none text-ink dark:text-white">RisetIn</p>
+          <p className="text-[10.5px] text-sub dark:text-white/50">Riset × Industri</p>
         </div>
       </div>
 
@@ -38,7 +38,7 @@ export default function Sidebar({ onNavigate }) {
             navigate("/upload");
             onNavigate?.();
           }}
-          className="tap mx-4 mb-2 flex items-center justify-center gap-2 rounded-xl bg-white py-2.5 text-[13px] font-bold text-brand-700 shadow-soft hover:shadow-md transition-shadow"
+          className="tap mx-4 mb-2 flex items-center justify-center gap-2 rounded-xl bg-brand-600 py-2.5 text-[13px] font-bold text-white shadow-soft hover:shadow-md hover:bg-brand-700 transition-all"
         >
           <UploadCloud size={16} /> Upload Riset
         </button>
@@ -53,14 +53,23 @@ export default function Sidebar({ onNavigate }) {
             onClick={onNavigate}
             className={({ isActive }) =>
               `group relative flex items-center gap-3 overflow-hidden rounded-xl px-3 py-2.5 text-[13.5px] font-medium transition-all duration-200 ${
-                isActive ? "bg-white/15 text-white" : "text-white/65 hover:bg-white/10 hover:text-white"
+                isActive
+                  ? "bg-brand-50 dark:bg-white/15 text-brand-700 dark:text-white"
+                  : "text-gray-600 dark:text-white/65 hover:bg-gray-50 dark:hover:bg-white/10 hover:text-ink dark:hover:text-white"
               }`
             }
           >
             {({ isActive }) => (
               <>
-                {isActive && <span className="absolute left-0 top-0 h-full w-1 rounded-r-full bg-white" />}
-                <it.icon size={18} className="transition-transform duration-200 group-hover:scale-110" />
+                {isActive && (
+                  <span className="absolute left-0 top-0 h-full w-1 rounded-r-full bg-brand-600 dark:bg-white" />
+                )}
+                <it.icon
+                  size={18}
+                  className={`transition-transform duration-200 group-hover:scale-110 ${
+                    isActive ? "text-brand-600 dark:text-white" : ""
+                  }`}
+                />
                 {it.label}
               </>
             )}
@@ -73,16 +82,16 @@ export default function Sidebar({ onNavigate }) {
           navigate("/profil");
           onNavigate?.();
         }}
-        className="tap m-3 mt-3 flex items-center gap-3 rounded-xl bg-white/5 p-3 text-left transition-colors hover:bg-white/10"
+        className="tap m-3 mt-3 flex items-center gap-3 rounded-xl bg-gray-50 dark:bg-white/5 p-3 text-left transition-colors hover:bg-gray-100 dark:hover:bg-white/10"
       >
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-400 text-[11px] font-bold text-white">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-600 text-[11px] font-bold text-white">
           {user.inisial}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[12.5px] font-semibold text-white">{user.nama}</p>
-          <p className="truncate text-[10.5px] text-white/50">{user.role}</p>
+          <p className="truncate text-[12.5px] font-semibold text-ink dark:text-white">{user.nama}</p>
+          <p className="truncate text-[10.5px] text-sub dark:text-white/50">{user.role}</p>
         </div>
-        <ChevronRight size={15} className="shrink-0 text-white/40" />
+        <ChevronRight size={15} className="shrink-0 text-gray-400 dark:text-white/40" />
       </button>
     </aside>
   );

@@ -17,7 +17,7 @@ export default function Komentar() {
 
   if (!r) {
     return (
-      <Container>
+      <Container wide>
         <p className="py-16 text-center text-[13px] text-sub">Riset tidak ditemukan</p>
       </Container>
     );
@@ -31,10 +31,10 @@ export default function Komentar() {
   };
 
   return (
-    <Container>
+    <Container wide>
       <PageHeader title="Komentar" back subtitle={`${list.length} komentar pada riset ini`} />
 
-      <div className="mx-auto max-w-2xl space-y-5">
+      <div className="w-full space-y-5">
         <button
           onClick={() => navigate(`/riset/${r.id}`)}
           className="tap lift flex w-full items-center gap-3 rounded-2xl bg-white p-3 text-left shadow-card dark:bg-[#101f2e]"

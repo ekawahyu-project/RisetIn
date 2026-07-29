@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Inbox, Building2, MessageSquare } from "lucide-react";
+import { Inbox, Building2, MessageSquare, FileText } from "lucide-react";
 import { useApp } from "../context/AppContext";
 import RisetThumb from "../components/RisetThumb";
 import { CategoryBadge } from "../components/Badge";
@@ -112,6 +112,12 @@ function KolaborasiMahasiswa() {
                     Lihat Proses
                   </button>
                 </div>
+                <button
+                  onClick={() => navigate(`/nda/${p.id}`)}
+                  className="tap mt-2 w-full flex items-center justify-center gap-1.5 rounded-lg border border-brand-300 dark:border-brand-500/50 py-2 text-[12.5px] font-bold text-brand-700 dark:text-brand-300 hover:bg-brand-50 dark:hover:bg-brand-500/10 transition-colors"
+                >
+                  <FileText size={14} /> Perjanjian NDA
+                </button>
               </div>
             );
           })}
@@ -202,6 +208,12 @@ function KolaborasiIndustri() {
                     Lihat Proses
                   </button>
                 </div>
+                <button
+                  onClick={() => navigate(`/nda/${p.id}`)}
+                  className="tap mt-2 w-full flex items-center justify-center gap-1.5 rounded-lg border border-brand-300 dark:border-brand-500/50 py-2 text-[12.5px] font-bold text-brand-700 dark:text-brand-300 hover:bg-brand-50 dark:hover:bg-brand-500/10 transition-colors"
+                >
+                  <FileText size={14} /> Perjanjian NDA
+                </button>
               </div>
             );
           })}

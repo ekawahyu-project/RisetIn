@@ -22,6 +22,7 @@ import Profil from "./pages/Profil";
 import EditProfil from "./pages/EditProfil";
 import Pengaturan from "./pages/Pengaturan";
 import MatchmakingAI from "./pages/MatchmakingAI";
+import DigitalNDA from "./pages/DigitalNDA";
 
 function Toast() {
   const { toast } = useApp();
@@ -76,7 +77,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-sky-50 dark:bg-[#0b1420]">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-sky-50 via-sky-100 to-sky-200 dark:bg-[#0b1420]">
       <div className="mx-auto flex min-h-screen max-w-[1600px]">
         <div className="hidden shrink-0 lg:block lg:w-64">
           <div className="fixed h-screen w-64">
@@ -105,6 +106,7 @@ export default function App() {
                 <Route path="/profil" element={<Profil />} />
                 <Route path="/profil/edit" element={<EditProfil />} />
                 <Route path="/pengaturan" element={<Pengaturan />} />
+                <Route path="/nda/:id" element={<DigitalNDA />} />
                 <Route path="*" element={<Beranda />} />
               </Routes>
             </div>
