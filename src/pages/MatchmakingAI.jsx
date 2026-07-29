@@ -81,7 +81,7 @@ export default function MatchmakingAI() {
                             <p className="truncate text-[11px] text-sub">{r.kampus}</p>
                             <div className="mt-1.5 flex items-center gap-1.5">
                               <CategoryBadge kategori={r.kategori} />
-                              <span className="rounded-full bg-leaf/10 px-2 py-0.5 text-[10.5px] font-bold text-leaf">
+                              <span className="rounded-full border border-brand-600 px-2 py-0.5 text-[10.5px] font-bold text-brand-600">
                                 Kecocokan {m.score}%
                               </span>
                             </div>
