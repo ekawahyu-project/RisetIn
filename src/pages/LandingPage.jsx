@@ -236,14 +236,14 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
 }
 
 export default function LandingPage() {
-  const { login, theme, toggleTheme } = useApp();
+  const { login } = useApp();
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState("login");
 
   const openLogin = () => { setModalMode("login"); setShowModal(true); };
   const openRegister = () => { setModalMode("register"); setShowModal(true); };
 
-  const isDark = theme === "dark";
+  const isDark = false;
 
   return (
     <div className={`min-h-screen overflow-x-hidden transition-colors duration-300 ${
@@ -265,31 +265,15 @@ export default function LandingPage() {
         <div className="hidden items-center gap-8 md:flex">
           {["Fitur", "Cara Kerja", "Kategori", "Tentang"].map((item) => (
             <a key={item} href={`#${item.toLowerCase().replace(" ", "-")}`}
-              className={`text-[13.5px] font-medium transition-colors ${
-                isDark ? "text-white/60 hover:text-white" : "text-gray-500 hover:text-gray-900"
-              }`}>
+              className="text-[13.5px] font-medium transition-colors text-gray-500 hover:text-gray-900">
               {item}
             </a>
           ))}
         </div>
 
         <div className="flex items-center gap-2">
-          {/* Toggle terang/gelap */}
-          <button
-            onClick={toggleTheme}
-            className={`tap flex h-9 w-9 items-center justify-center rounded-xl transition-colors ${
-              isDark
-                ? "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900"
-            }`}
-            title={isDark ? "Mode Terang" : "Mode Gelap"}
-          >
-            {isDark ? <Sun size={17} /> : <Moon size={17} />}
-          </button>
           <button onClick={openLogin}
-            className={`tap hidden rounded-xl px-4 py-2 text-[13px] font-semibold transition-colors sm:block ${
-              isDark ? "text-white/70 hover:text-white" : "text-gray-600 hover:text-gray-900"
-            }`}>
+            className={`tap hidden rounded-xl px-4 py-2 text-[13px] font-semibold transition-colors sm:block text-gray-600 hover:text-gray-900`}>
             Masuk
           </button>
           <button onClick={openRegister} className="tap btn-primary rounded-xl px-5 py-2.5 text-[13px] font-bold">
@@ -329,7 +313,7 @@ export default function LandingPage() {
             <span className="gradient-text">Riset Kampus</span>
             <br />
             dengan{" "}
-            <span className="gradient-text-warm">Industri Nyata</span>
+            <span className="gradient-text">Industri Nyata</span>
           </h1>
 
           <p className={`fade-up stagger-2 mx-auto mt-6 max-w-xl text-[16px] leading-relaxed ${isDark ? "text-white/55" : "text-gray-500"}`}>

@@ -55,7 +55,7 @@ function LogoutModal({ onConfirm, onCancel }) {
 
 export default function Topbar({ onMenuClick }) {
   const navigate = useNavigate();
-  const { user, notifications, unreadCount, markAllRead, theme, toggleTheme, logout } = useApp();
+  const { user, notifications, unreadCount, markAllRead, logout } = useApp();
   const [notifOpen, setNotifOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [bellShake, setBellShake] = useState(false);
@@ -96,19 +96,6 @@ export default function Topbar({ onMenuClick }) {
         </div>
 
         <div className="ml-auto flex items-center gap-2 sm:gap-3">
-          {/* Theme toggle */}
-          <button
-            onClick={toggleTheme}
-            className="tap relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-sky-100 text-brand-700 dark:bg-white/10 dark:text-gold transition-colors hover:bg-sky-200 dark:hover:bg-white/15"
-            title={theme === "dark" ? "Mode terang" : "Mode gelap"}
-          >
-            <span className={`transition-all duration-300 ${theme === "dark" ? "rotate-0 scale-100" : "rotate-90 scale-0 absolute"}`}>
-              <Moon size={16} />
-            </span>
-            <span className={`transition-all duration-300 ${theme === "dark" ? "-rotate-90 scale-0 absolute" : "rotate-0 scale-100"}`}>
-              <Sun size={16} />
-            </span>
-          </button>
 
           {/* Notifications */}
           <div className="relative" ref={notifRef}>

@@ -13,12 +13,7 @@ import {
 
 const AppContext = createContext(null);
 
-function getInitialTheme() {
-  if (typeof window === "undefined") return "light";
-  const saved = window.localStorage.getItem("risetin-theme");
-  if (saved) return saved;
-  return window.matchMedia?.("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-}
+
 
 // Baca sesi yang tersimpan dari localStorage
 function getInitialAuth() {
@@ -35,7 +30,6 @@ export function AppProvider({ children }) {
   const initialAuth = getInitialAuth();
   const [authed, setAuthed] = useState(initialAuth.authed);
   const [role, setRole] = useState(initialAuth.role);
-  const [theme, setTheme] = useState(getInitialTheme);
 
   const [riset, setRiset] = useState(() =>
     risetList.map((r) => ({
@@ -54,13 +48,8 @@ export function AppProvider({ children }) {
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (theme === "dark") root.classList.add("dark");
-    else root.classList.remove("dark");
-    window.localStorage.setItem("risetin-theme", theme);
-  }, [theme]);
-
-  const toggleTheme = () => setTheme((t) => (t === "dark" ? "light" : "dark"));
+    document.documentElement.classList.remove("dark");
+  }, []);
 
   const showToast = (msg) => {
     setToast(msg);
@@ -141,8 +130,6 @@ export function AppProvider({ children }) {
       logout,
       role,
       setRole,
-      theme,
-      toggleTheme,
       user: role === "mahasiswa" ? userMahasiswa : userIndustri,
       riset,
       addRiset,
@@ -165,7 +152,6 @@ export function AppProvider({ children }) {
     [
       authed,
       role,
-      theme,
       riset,
       comments,
       notifications,

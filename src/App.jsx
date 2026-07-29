@@ -77,7 +77,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-sky-50 via-sky-100 to-sky-200 dark:bg-[#0b1420]">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-sky-50 via-sky-100 to-sky-200">
       <div className="mx-auto flex min-h-screen max-w-[1600px]">
         <div className="hidden shrink-0 lg:block lg:w-64">
           <div className="fixed h-screen w-64">

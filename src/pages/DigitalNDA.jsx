@@ -2,8 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ChevronLeft, Shield, CheckCircle2, Copy, Calendar,
-  FileText, Pen, RotateCcw, AlertCircle,
+  User, Briefcase, Pen, RotateCcw, AlertCircle,
 } from "lucide-react";
+import { useApp } from "../context/AppContext";
 import Container from "../components/Container";
 import PageHeader from "../components/PageHeader";
 
@@ -105,7 +106,10 @@ function SignatureCanvas({ onSign }) {
 export default function DigitalNDA() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [step, setStep] = useState(1);
+  const { role } = useApp();
+  const isMahasiswa = role === "mahasiswa";
+
+  const [step, setStep] = useState(isMahasiswa ? 3 : 1);
   const [agreed, setAgreed] = useState(false);
   const [signature, setSignature] = useState(null);
   const [nama, setNama] = useState("");
@@ -137,7 +141,7 @@ export default function DigitalNDA() {
         {/* Header */}
         <div className="mb-6 flex items-center gap-3">
           <button
-            onClick={() => (step === 1 ? navigate(-1) : setStep((s) => s - 1))}
+            onClick={() => (step === 1 || isMahasiswa ? navigate(-1) : setStep((s) => s - 1))}
             className="tap flex h-9 w-9 items-center justify-center rounded-full text-ink dark:text-white hover:bg-sky-100 dark:hover:bg-white/10 transition-colors"
           >
             <ChevronLeft size={20} />
@@ -242,12 +246,12 @@ export default function DigitalNDA() {
                   Nama Lengkap
                 </label>
                 <div className="relative">
-                  <FileText size={15} className="pointer-events-none absolute left-3 top-3.5 text-brand-300" />
+                  <User size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-400" />
                   <input
                     value={nama}
                     onChange={(e) => setNama(e.target.value)}
                     placeholder="Masukkan nama lengkap"
-                    className="input pl-9"
+                    className="input !pl-[42px]"
                   />
                 </div>
               </div>
@@ -257,12 +261,12 @@ export default function DigitalNDA() {
                   Jabatan
                 </label>
                 <div className="relative">
-                  <FileText size={15} className="pointer-events-none absolute left-3 top-3.5 text-brand-300" />
+                  <Briefcase size={15} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-400" />
                   <input
                     value={jabatan}
                     onChange={(e) => setJabatan(e.target.value)}
                     placeholder="Contoh: VP Research &amp; Development"
-                    className="input pl-9"
+                    className="input !pl-[42px]"
                   />
                 </div>
               </div>
@@ -284,8 +288,8 @@ export default function DigitalNDA() {
             <div className="rounded-2xl bg-white dark:bg-[#101f2e] p-6 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 space-y-5">
               {/* Success header */}
               <div className="flex flex-col items-center gap-3 py-4">
-                <div className="flex h-18 w-18 items-center justify-center rounded-full bg-leaf/10 ring-4 ring-leaf/20 p-4">
-                  <CheckCircle2 size={32} className="text-leaf" />
+                <div className="flex h-18 w-18 items-center justify-center rounded-full bg-sky-100 dark:bg-white/10 ring-4 ring-sky-50 dark:ring-white/5 p-4">
+                  <CheckCircle2 size={32} className="text-brand-600 dark:text-brand-300" />
                 </div>
                 <h2 className="text-[18px] font-extrabold text-ink dark:text-white text-center">
                   NDA Berhasil Ditandatangani!
@@ -309,11 +313,13 @@ export default function DigitalNDA() {
 
                 <div className="h-px bg-line dark:bg-white/10" />
 
-                <div className="flex items-center gap-2.5">
-                  <Calendar size={15} className="shrink-0 text-brand-400" />
+                <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[10.5px] font-semibold uppercase tracking-widest text-sub">Tanggal Ditandatangani</p>
                     <p className="mt-0.5 text-[13px] font-semibold text-ink dark:text-white">{tanggal}</p>
+                  </div>
+                  <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-white dark:bg-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/10">
+                    <Calendar size={14} className="text-brand-600 dark:text-brand-300" />
                   </div>
                 </div>
               </div>
@@ -322,10 +328,16 @@ export default function DigitalNDA() {
               <div className="space-y-3">
                 <div>
                   <p className="mb-2 text-[10.5px] font-semibold uppercase tracking-widest text-sub">Tanda Tangan</p>
-                  {signature && (
+                  {isMahasiswa ? (
+                    <div className="rounded-xl border border-line dark:border-white/10 bg-white dark:bg-white/5 p-3 flex items-center justify-center min-h-[5rem]">
+                      <span className="font-['Caveat',cursive] text-3xl font-bold text-blue-900 rotate-[-5deg]">PT Agro Makmur</span>
+                    </div>
+                  ) : signature ? (
                     <div className="rounded-xl border border-line dark:border-white/10 bg-white dark:bg-white/5 p-3">
                       <img src={signature} alt="Tanda tangan" className="h-16 w-full object-contain" />
                     </div>
+                  ) : (
+                    <div className="rounded-xl border border-dashed border-line dark:border-white/10 bg-white/50 dark:bg-white/5 p-3 min-h-[5rem]" />
                   )}
                 </div>
 
@@ -333,15 +345,15 @@ export default function DigitalNDA() {
                   <div>
                     <p className="text-[10.5px] font-semibold uppercase tracking-widest text-sub">Nama Lengkap</p>
                     <div className="mt-1.5 flex items-center gap-2">
-                      <FileText size={14} className="shrink-0 text-brand-400" />
-                      <p className="text-[13.5px] font-semibold text-ink dark:text-white">{nama}</p>
+                      <User size={14} className="shrink-0 text-brand-400" />
+                      <p className="text-[13.5px] font-semibold text-ink dark:text-white">{isMahasiswa ? "Direktur PT Agro Makmur" : nama}</p>
                     </div>
                   </div>
                   <div>
                     <p className="text-[10.5px] font-semibold uppercase tracking-widest text-sub">Jabatan</p>
                     <div className="mt-1.5 flex items-center gap-2">
-                      <FileText size={14} className="shrink-0 text-brand-400" />
-                      <p className="text-[13.5px] font-semibold text-ink dark:text-white">{jabatan}</p>
+                      <Briefcase size={14} className="shrink-0 text-brand-400" />
+                      <p className="text-[13.5px] font-semibold text-ink dark:text-white">{isMahasiswa ? "CEO & Founder" : jabatan}</p>
                     </div>
                   </div>
                 </div>
