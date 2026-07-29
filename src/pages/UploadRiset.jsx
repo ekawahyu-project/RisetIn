@@ -7,7 +7,7 @@ import RisetThumb from "../components/RisetThumb";
 import PageHeader from "../components/PageHeader";
 import Container from "../components/Container";
 
-const steps = ["Informasi", "Dokumen", "Pengecekan", "Publikasi"];
+const steps = ["Informasi", "Dokumen", "Publikasi"];
 
 export default function UploadRiset() {
   const navigate = useNavigate();
@@ -109,7 +109,7 @@ export default function UploadRiset() {
                 <div
                   className={`flex h-8 w-8 items-center justify-center rounded-full text-[12.5px] font-bold transition-all ${
                     i + 1 < step
-                      ? "bg-leaf text-white"
+                      ? "bg-brand-600 text-white"
                       : i + 1 === step
                       ? "bg-brand-600 text-white ring-4 ring-brand-600/20"
                       : "bg-sky-100 dark:bg-white/5 text-brand-400"
@@ -268,42 +268,8 @@ export default function UploadRiset() {
             </div>
           )}
 
-          {/* ========== STEP 3: Pengecekan ========== */}
+          {/* ========== STEP 3: Publikasi ========== */}
           {step === 3 && (
-            <div className="fade-up space-y-4">
-              <h2 className="text-[15px] font-bold text-ink dark:text-white">Pengecekan Otomatis</h2>
-              <p className="text-[13px] leading-relaxed text-sub">
-                Mesin AI RisetIn akan mengekstraksi metadata riset Anda (abstrak, teknologi inti, potensi aplikasi) secara otomatis.
-              </p>
-              <div className="rounded-2xl bg-sky-50 dark:bg-white/5 p-5">
-                {!checking && !checked && (
-                  <button
-                    onClick={runCheck}
-                    className="tap flex w-full items-center justify-center gap-2 rounded-xl bg-brand-600 py-3 text-[13px] font-bold text-white hover:bg-brand-700 transition-colors"
-                  >
-                    <Sparkles size={16} /> Jalankan Pengecekan AI
-                  </button>
-                )}
-                {checking && (
-                  <div className="flex flex-col items-center gap-3 py-6">
-                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand-200 border-t-brand-600" />
-                    <p className="text-[13px] text-sub">Menganalisis dokumen riset...</p>
-                  </div>
-                )}
-                {checked && (
-                  <div className="fade-up space-y-2.5">
-                    <CheckRow label="Abstrak terekstraksi" />
-                    <CheckRow label="Teknologi inti teridentifikasi" />
-                    <CheckRow label="Potensi aplikasi industri ditemukan" />
-                    <CheckRow label="Bebas indikasi plagiarisme" />
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* ========== STEP 4: Publikasi ========== */}
-          {step === 4 && (
             <div className="fade-up space-y-4">
               <h2 className="text-[15px] font-bold text-ink dark:text-white">Pratinjau Publikasi</h2>
               <div className="rounded-2xl bg-sky-50 dark:bg-white/5 p-4">
@@ -351,15 +317,10 @@ export default function UploadRiset() {
                 Kembali
               </button>
             )}
-            {step < 4 ? (
+            {step < 3 ? (
               <button
-                onClick={() => setStep((s) => Math.min(s + 1, 4))}
-                disabled={step === 3 && !checked}
-                className={`tap rounded-xl px-6 py-3 text-[13px] font-bold text-white transition-colors ${
-                  step === 3 && !checked
-                    ? "bg-brand-300 cursor-not-allowed"
-                    : "bg-brand-600 hover:bg-brand-700"
-                }`}
+                onClick={() => setStep((s) => Math.min(s + 1, 3))}
+                className="tap rounded-xl bg-brand-600 px-6 py-3 text-[13px] font-bold text-white hover:bg-brand-700 transition-colors"
               >
                 Selanjutnya
               </button>
