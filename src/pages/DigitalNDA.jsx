@@ -137,7 +137,7 @@ export default function DigitalNDA() {
 
   return (
     <Container wide>
-      <div className="mx-auto max-w-2xl">
+      <div className="w-full">
         {/* Header */}
         <div className="mb-6 flex items-center gap-3">
           <button
