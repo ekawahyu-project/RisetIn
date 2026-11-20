@@ -1,26 +1,37 @@
 import React, { useState } from "react";
-import { Mail, Lock, User, Eye, EyeOff, ArrowRight, FlaskConical, Building2, Sparkles } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, ArrowRight, FlaskConical, Building2 } from "lucide-react";
 import { useApp } from "../context/AppContext";
 
 export default function Login() {
-  const { login } = useApp();
+  const { login, register, demoLogin } = useApp();
   const [mode, setMode] = useState("login"); // login | register
+  const [role, setRole] = useState("mahasiswa");
   const [nama, setNama] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const isIndustri = /industri/i.test(email);
-
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) return;
+    setError("");
+    if (!email.trim() || !password.trim()) {
+      setError("Email dan kata sandi wajib diisi.");
+      return;
+    }
     setLoading(true);
-    setTimeout(() => {
+    try {
+      if (mode === "login") {
+        await login({ email: email.trim(), password });
+      } else {
+        await register({ nama: nama.trim(), email: email.trim(), password, role });
+      }
+    } catch (err) {
+      setError(err.message || "Autentikasi gagal.");
+    } finally {
       setLoading(false);
-      login({ email });
-    }, 650);
+    }
   };
 
   return (
@@ -83,16 +94,43 @@ export default function Login() {
             {mode === "login" ? "Masuk untuk melanjutkan ke RisetIn." : "Bergabung dan mulai jelajahi ekosistem riset & industri."}
           </p>
 
+          {error && (
+            <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-[12.5px] font-medium text-red-700">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={submit} className="mt-7 space-y-4">
             {mode === "register" && (
-              <Field label="Nama lengkap / Nama perusahaan" icon={User}>
-                <input
-                  value={nama}
-                  onChange={(e) => setNama(e.target.value)}
-                  placeholder="Masukkan nama"
-                  className="input pl-10 dark:bg-white/5 dark:border-white/10 dark:text-white"
-                />
-              </Field>
+              <>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { key: "mahasiswa", label: "Mahasiswa", Icon: FlaskConical },
+                    { key: "industri", label: "Industri", Icon: Building2 },
+                  ].map(({ key, label, Icon }) => (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setRole(key)}
+                      className={`tap flex items-center justify-center gap-2 rounded-xl border py-2.5 text-[12.5px] font-semibold ${
+                        role === key
+                          ? "border-brand-500 bg-brand-50 text-brand-700"
+                          : "border-line bg-white text-sub"
+                      }`}
+                    >
+                      <Icon size={14} /> {label}
+                    </button>
+                  ))}
+                </div>
+                <Field label="Nama lengkap / Nama perusahaan" icon={User}>
+                  <input
+                    value={nama}
+                    onChange={(e) => setNama(e.target.value)}
+                    placeholder="Masukkan nama"
+                    className="input pl-10 dark:bg-white/5 dark:border-white/10 dark:text-white"
+                  />
+                </Field>
+              </>
             )}
 
             <Field label="Alamat email" icon={Mail}>
@@ -122,14 +160,6 @@ export default function Login() {
               </button>
             </Field>
 
-            {email && (
-              <div className="fade-up flex items-center gap-2 rounded-xl bg-sky-100 px-3.5 py-2.5 text-[12px] text-brand-700 dark:bg-white/5 dark:text-brand-200">
-                <Sparkles size={14} className="shrink-0" />
-                Terdeteksi masuk sebagai <b>{isIndustri ? "Industri" : "Mahasiswa"}</b>
-                {isIndustri ? <Building2 size={14} className="ml-auto shrink-0" /> : <FlaskConical size={14} className="ml-auto shrink-0" />}
-              </div>
-            )}
-
             <button
               type="submit"
               disabled={loading}
@@ -146,9 +176,27 @@ export default function Login() {
             </button>
           </form>
 
-          <p className="mt-6 text-center text-[12px] text-sub">
-            Tips demo: gunakan email berisi kata <b>"industri"</b> (contoh: kemitraan@industriagro.co.id) untuk masuk sebagai akun
-            Industri. Email lainnya akan masuk sebagai Mahasiswa.
+          <div className="mt-6 grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => demoLogin("mahasiswa")}
+              className="tap flex items-center justify-center gap-1.5 rounded-xl border border-brand-200 bg-white py-2.5 text-[12.5px] font-bold text-brand-700"
+            >
+              <FlaskConical size={14} /> Demo Mahasiswa
+            </button>
+            <button
+              type="button"
+              disabled={loading}
+              onClick={() => demoLogin("industri")}
+              className="tap flex items-center justify-center gap-1.5 rounded-xl border border-brand-200 bg-white py-2.5 text-[12.5px] font-bold text-brand-700"
+            >
+              <Building2 size={14} /> Demo Industri
+            </button>
+          </div>
+
+          <p className="mt-3 text-center text-[12px] text-sub">
+            Mode demo: gunakan tombol cepat di atas, atau isi email bebas (berisi <b>"industri"</b> → akun Industri).
           </p>
         </div>
       </div>

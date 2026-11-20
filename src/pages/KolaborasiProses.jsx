@@ -11,17 +11,17 @@ import { tahapanKolaborasi } from "../data/mockData";
 export default function KolaborasiProses() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { riset, berjalan, indBerjalan, role, advanceStage, showToast } = useApp();
+  const { riset, berjalan, indBerjalan, role, advanceStage } = useApp();
 
   const proyek = [...berjalan, ...indBerjalan].find((p) => p.id === id);
-  if (!proyek) {
+  const r = proyek ? riset.find((x) => x.id === proyek.risetId) : null;
+  if (!proyek || !r) {
     return (
       <Container>
         <p className="py-16 text-center text-[13px] text-sub">Proyek tidak ditemukan</p>
       </Container>
     );
   }
-  const r = riset.find((x) => x.id === proyek.risetId);
 
   return (
     <Container>
@@ -84,10 +84,7 @@ export default function KolaborasiProses() {
 
             {role === "mahasiswa" && proyek.tahap < 4 && (
               <button
-                onClick={() => {
-                  advanceStage(proyek.id);
-                  showToast("Tahapan kolaborasi diperbarui");
-                }}
+                onClick={() => advanceStage(proyek.id)}
                 className="tap w-full rounded-xl bg-brand-600 py-3 text-[13px] font-bold text-white sm:w-auto sm:px-6"
               >
                 Tandai Tahap Berikutnya

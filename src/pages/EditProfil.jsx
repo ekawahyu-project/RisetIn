@@ -5,11 +5,22 @@ import Container from "../components/Container";
 import { useApp } from "../context/AppContext";
 
 export default function EditProfil() {
-  const { user, showToast } = useApp();
-  const [nama, setNama] = useState(user.nama);
-  const [email, setEmail] = useState(user.email);
-  const [telp, setTelp] = useState("");
-  const [bio, setBio] = useState(user.bio);
+  const { user, updateProfile, showToast } = useApp();
+  const [nama, setNama] = useState(user.nama || "");
+  const [telp, setTelp] = useState(user.telp || "");
+  const [bio, setBio] = useState(user.bio || "");
+  const [saving, setSaving] = useState(false);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await updateProfile({ nama, telp, bio });
+    } catch (err) {
+      showToast(err.message || "Gagal menyimpan profil");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <Container wide>
@@ -31,7 +42,7 @@ export default function EditProfil() {
               <input value={nama} onChange={(e) => setNama(e.target.value)} className="input" />
             </Field>
             <Field label="Alamat email">
-              <input value={email} onChange={(e) => setEmail(e.target.value)} className="input" />
+              <input value={user.email || ""} disabled className="input cursor-not-allowed opacity-70" />
             </Field>
           </div>
           <Field label="Nomor telepon">
@@ -44,10 +55,11 @@ export default function EditProfil() {
 
         <div className="mt-6 flex justify-end">
           <button
-            onClick={() => showToast("Perubahan disimpan")}
-            className="tap rounded-xl bg-brand-600 px-6 py-3 text-[13px] font-bold text-white"
+            onClick={handleSave}
+            disabled={saving}
+            className="tap rounded-xl bg-brand-600 px-6 py-3 text-[13px] font-bold text-white disabled:opacity-60"
           >
-            Simpan perubahan
+            {saving ? "Menyimpan..." : "Simpan perubahan"}
           </button>
         </div>
       </div>

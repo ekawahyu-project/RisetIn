@@ -59,13 +59,24 @@ function MobileDrawer({ open, onClose }) {
 
 export default function App() {
   const location = useLocation();
-  const { authed } = useApp();
+  const { authed, authLoading } = useApp();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     setDrawerOpen(false);
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
+  if (authLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-sky-50">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-9 w-9 animate-spin rounded-full border-4 border-brand-200 border-t-brand-600" />
+          <p className="text-[13px] font-medium text-sub">Memuat RisetIn...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!authed) {
     return (

@@ -1,166 +1,398 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
-import {
-  risetList,
-  notifications as notifSeed,
-  collaborationsMasuk,
-  collaborationsBerjalan,
-  industryCollabPengajuan,
-  industryCollabBerjalan,
-  commentsSeed,
-  userMahasiswa,
-  userIndustri,
-} from "../data/mockData";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { apiFetch, getToken, setToken } from "../lib/api";
 
 const AppContext = createContext(null);
 
-
-
-// Baca sesi yang tersimpan dari localStorage
-function getInitialAuth() {
-  try {
-    const authed = window.localStorage.getItem("risetin-authed") === "true";
-    const role = window.localStorage.getItem("risetin-role") || "mahasiswa";
-    return { authed, role };
-  } catch {
-    return { authed: false, role: "mahasiswa" };
-  }
-}
+const EMPTY_USER = {
+  id: "",
+  nama: "",
+  role: "Mahasiswa",
+  roleKey: "mahasiswa",
+  kampus: "",
+  sektor: "",
+  inisial: "U",
+  bio: "",
+  email: "",
+  telp: "",
+  stats: { riset: 0, kolaborasi: 0, pengunjung: "0", diadopsi: 0, kebutuhan: 0, dilihat: "0" },
+};
 
 export function AppProvider({ children }) {
-  const initialAuth = getInitialAuth();
-  const [authed, setAuthed] = useState(initialAuth.authed);
-  const [role, setRole] = useState(initialAuth.role);
-
-  const [riset, setRiset] = useState(() =>
-    risetList.map((r) => ({
-      ...r,
-      liked: false,
-      // pakai jumlah komentar aktual dari commentsSeed, default 0
-      komentar: commentsSeed[r.id]?.length ?? 0,
-    }))
-  );
-  const [comments, setComments] = useState(commentsSeed);
-  const [notifications, setNotifications] = useState(notifSeed);
-  const [masuk, setMasuk] = useState(collaborationsMasuk);
-  const [berjalan, setBerjalan] = useState(collaborationsBerjalan);
-  const [indPengajuan, setIndPengajuan] = useState(industryCollabPengajuan);
-  const [indBerjalan, setIndBerjalan] = useState(industryCollabBerjalan);
+  const [authLoading, setAuthLoading] = useState(Boolean(getToken()));
+  const [user, setUser] = useState(null);
+  const [riset, setRiset] = useState([]);
+  const [comments, setComments] = useState({});
+  const [notifications, setNotifications] = useState([]);
+  const [masuk, setMasuk] = useState([]);
+  const [berjalan, setBerjalan] = useState([]);
+  const [indPengajuan, setIndPengajuan] = useState([]);
+  const [indBerjalan, setIndBerjalan] = useState([]);
   const [toast, setToast] = useState(null);
 
   useEffect(() => {
     document.documentElement.classList.remove("dark");
   }, []);
 
-  const showToast = (msg) => {
+  const showToast = useCallback((msg) => {
     setToast(msg);
     window.clearTimeout(showToast._t);
-    showToast._t = window.setTimeout(() => setToast(null), 2400);
-  };
+    showToast._t = window.setTimeout(() => setToast(null), 2600);
+  }, []);
 
-  const login = ({ email }) => {
-    const isIndustri = /industri/i.test(email || "");
-    const newRole = isIndustri ? "industri" : "mahasiswa";
-    setRole(newRole);
-    setAuthed(true);
-    // Simpan sesi ke localStorage agar tidak hilang saat refresh
-    window.localStorage.setItem("risetin-authed", "true");
-    window.localStorage.setItem("risetin-role", newRole);
-    showToast(isIndustri ? "Berhasil masuk sebagai Industri" : "Berhasil masuk sebagai Mahasiswa");
-  };
-
-  const logout = () => {
-    setAuthed(false);
-    // Hapus sesi dari localStorage
-    window.localStorage.removeItem("risetin-authed");
-    window.localStorage.removeItem("risetin-role");
-    showToast("Anda telah keluar");
-  };
-
-  const unreadCount = notifications.filter((n) => n.unread).length;
-
-  const markAllRead = () => setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
-
-  const acceptMasuk = (id) => {
-    const item = masuk.find((m) => m.id === id);
-    if (!item) return;
-    setMasuk((prev) => prev.filter((m) => m.id !== id));
-    setBerjalan((prev) => [
-      { id: "p" + Date.now(), risetId: item.risetId, perusahaan: item.perusahaan, updated: "baru saja", tahap: 0 },
-      ...prev,
+  const loadAppData = useCallback(async () => {
+    const [risetData, collabData, notifData] = await Promise.all([
+      apiFetch("/api/riset"),
+      apiFetch("/api/collaborations"),
+      apiFetch("/api/notifications"),
     ]);
-    showToast(`Kolaborasi dengan ${item.perusahaan} diterima`);
-  };
+    setRiset(risetData.riset || []);
+    setMasuk(collabData.masuk || []);
+    setBerjalan(collabData.berjalan || []);
+    setIndPengajuan(collabData.indPengajuan || []);
+    setIndBerjalan(collabData.indBerjalan || []);
+    setNotifications(notifData.notifications || []);
+  }, []);
 
-  const rejectMasuk = (id) => {
-    const item = masuk.find((m) => m.id === id);
-    setMasuk((prev) => prev.filter((m) => m.id !== id));
-    if (item) showToast(`Permintaan dari ${item.perusahaan} ditolak`);
-  };
+  const refreshMe = useCallback(async () => {
+    const me = await apiFetch("/api/auth/me");
+    setUser(me.user);
+    return me.user;
+  }, []);
 
-  const advanceStage = (id) => {
-    setBerjalan((prev) => prev.map((p) => (p.id === id ? { ...p, tahap: Math.min(p.tahap + 1, 4) } : p)));
-  };
-
-  const addRiset = (item) => {
-    setRiset((prev) => [{ ...item, liked: false }, ...prev]);
-  };
-
-  const toggleLike = (id) => {
-    setRiset((prev) =>
-      prev.map((r) => (r.id === id ? { ...r, liked: !r.liked, suka: r.liked ? r.suka - 1 : r.suka + 1 } : r))
-    );
-  };
-
-  const addComment = (risetId, text) => {
-    const entry = {
-      id: "cm" + Date.now(),
-      nama: role === "mahasiswa" ? userMahasiswa.nama : userIndustri.nama,
-      inisial: role === "mahasiswa" ? userMahasiswa.inisial : userIndustri.inisial,
-      text,
-      time: "Baru saja",
+  // Restore session from JWT token on startup
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      setAuthLoading(false);
+      return;
+    }
+    let active = true;
+    (async () => {
+      try {
+        const me = await apiFetch("/api/auth/me");
+        if (!active) return;
+        setUser(me.user);
+        await loadAppData();
+      } catch (err) {
+        if (!active) return;
+        if (err.status === 401) {
+          setToken(null);
+          setUser(null);
+        } else {
+          showToast(err.message);
+        }
+      } finally {
+        if (active) setAuthLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
     };
-    setComments((prev) => ({ ...prev, [risetId]: [...(prev[risetId] || []), entry] }));
-    setRiset((prev) => prev.map((r) => (r.id === risetId ? { ...r, komentar: r.komentar + 1 } : r)));
-  };
+  }, [loadAppData, showToast]);
+
+  const login = useCallback(
+    async ({ email, password }) => {
+      const data = await apiFetch("/api/auth/login", {
+        method: "POST",
+        body: { email, password },
+      });
+      setToken(data.token);
+      setUser(data.user);
+      await loadAppData();
+      showToast(
+        data.user.roleKey === "industri"
+          ? `Berhasil masuk sebagai ${data.user.nama} (Industri)`
+          : `Berhasil masuk sebagai ${data.user.nama}`
+      );
+      return data.user;
+    },
+    [loadAppData, showToast]
+  );
+
+  const register = useCallback(
+    async ({ nama, email, password, role, kampus, sektor }) => {
+      const data = await apiFetch("/api/auth/register", {
+        method: "POST",
+        body: { nama, email, password, role, kampus, sektor },
+      });
+      setToken(data.token);
+      setUser(data.user);
+      await loadAppData();
+      showToast("Berhasil masuk ke mode demo RisetIn!");
+      return data.user;
+    },
+    [loadAppData, showToast]
+  );
+
+  const demoLogin = useCallback(
+    async (targetRole) => {
+      const data = await apiFetch("/api/auth/demo", {
+        method: "POST",
+        body: { role: targetRole },
+      });
+      setToken(data.token);
+      setUser(data.user);
+      await loadAppData();
+      showToast(
+        targetRole === "industri"
+          ? `Masuk demo sebagai ${data.user.nama} (Industri)`
+          : `Masuk demo sebagai ${data.user.nama} (Mahasiswa)`
+      );
+      return data.user;
+    },
+    [loadAppData, showToast]
+  );
+
+  const logout = useCallback(() => {
+    setToken(null);
+    setUser(null);
+    setRiset([]);
+    setComments({});
+    setNotifications([]);
+    setMasuk([]);
+    setBerjalan([]);
+    setIndPengajuan([]);
+    setIndBerjalan([]);
+    showToast("Anda telah keluar");
+  }, [showToast]);
+
+  const updateProfile = useCallback(
+    async (payload) => {
+      const data = await apiFetch("/api/auth/profile", {
+        method: "PATCH",
+        body: payload,
+      });
+      setUser(data.user);
+      showToast("Perubahan profil disimpan");
+      return data.user;
+    },
+    [showToast]
+  );
+
+  const unreadCount = useMemo(() => notifications.filter((n) => n.unread).length, [notifications]);
+
+  const markAllRead = useCallback(async () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+    try {
+      await apiFetch("/api/notifications/read-all", { method: "POST" });
+    } catch {
+      // keep optimistic UI
+    }
+  }, []);
+
+  const addRiset = useCallback(
+    async (formData) => {
+      const data = await apiFetch("/api/riset", { method: "POST", formData });
+      setRiset((prev) => [data.riset, ...prev]);
+      await Promise.all([refreshMe(), apiFetch("/api/notifications").then((n) => setNotifications(n.notifications || []))]);
+      showToast("Riset berhasil diterbitkan!");
+      return data.riset;
+    },
+    [refreshMe, showToast]
+  );
+
+  const trackRisetView = useCallback(async (id) => {
+    try {
+      const data = await apiFetch(`/api/riset/${id}?trackView=1`);
+      if (data?.riset) {
+        setRiset((prev) => prev.map((r) => (r.id === String(id) ? data.riset : r)));
+      }
+    } catch {
+      // non-blocking
+    }
+  }, []);
+
+  const toggleLike = useCallback(
+    async (id) => {
+      const key = String(id);
+      // Optimistic toggle
+      setRiset((prev) =>
+        prev.map((r) =>
+          r.id === key ? { ...r, liked: !r.liked, suka: r.liked ? Math.max(0, r.suka - 1) : r.suka + 1 } : r
+        )
+      );
+      try {
+        const res = await apiFetch(`/api/riset/${key}/like`, { method: "POST" });
+        setRiset((prev) => prev.map((r) => (r.id === key ? { ...r, liked: res.liked, suka: res.suka } : r)));
+      } catch (err) {
+        // Revert on failure
+        setRiset((prev) =>
+          prev.map((r) =>
+            r.id === key ? { ...r, liked: !r.liked, suka: r.liked ? Math.max(0, r.suka - 1) : r.suka + 1 } : r
+          )
+        );
+        showToast(err.message);
+      }
+    },
+    [showToast]
+  );
+
+  const fetchComments = useCallback(async (risetId) => {
+    const key = String(risetId);
+    const data = await apiFetch(`/api/riset/${key}/comments`);
+    setComments((prev) => ({ ...prev, [key]: data.comments || [] }));
+    return data.comments || [];
+  }, []);
+
+  const addComment = useCallback(
+    async (risetId, text) => {
+      const key = String(risetId);
+      const data = await apiFetch(`/api/riset/${key}/comments`, {
+        method: "POST",
+        body: { text },
+      });
+      setComments((prev) => ({ ...prev, [key]: [...(prev[key] || []), data.comment] }));
+      setRiset((prev) => prev.map((r) => (r.id === key ? { ...r, komentar: data.komentar } : r)));
+      return data.comment;
+    },
+    []
+  );
+
+  const requestCollaboration = useCallback(
+    async (risetId, pesan) => {
+      const data = await apiFetch("/api/collaborations", {
+        method: "POST",
+        body: { risetId, pesan },
+      });
+      setIndPengajuan((prev) => [data.pengajuan, ...prev]);
+      refreshMe().catch(() => {});
+      showToast("Pengajuan kolaborasi terkirim");
+      return data.pengajuan;
+    },
+    [refreshMe, showToast]
+  );
+
+  const acceptMasuk = useCallback(
+    async (id) => {
+      try {
+        const data = await apiFetch(`/api/collaborations/${id}/respond`, {
+          method: "PATCH",
+          body: { action: "accept" },
+        });
+        setMasuk((prev) => prev.filter((m) => m.id !== String(id)));
+        setBerjalan((prev) => [
+          {
+            id: data.collaboration.id,
+            risetId: data.collaboration.risetId,
+            perusahaan: data.collaboration.perusahaan,
+            updated: data.collaboration.updated,
+            tahap: data.collaboration.tahap,
+          },
+          ...prev,
+        ]);
+        refreshMe().catch(() => {});
+        showToast(`Kolaborasi dengan ${data.collaboration.perusahaan} diterima`);
+      } catch (err) {
+        showToast(err.message);
+      }
+    },
+    [refreshMe, showToast]
+  );
+
+  const rejectMasuk = useCallback(
+    async (id) => {
+      try {
+        const data = await apiFetch(`/api/collaborations/${id}/respond`, {
+          method: "PATCH",
+          body: { action: "reject" },
+        });
+        setMasuk((prev) => prev.filter((m) => m.id !== String(id)));
+        showToast(`Permintaan dari ${data.collaboration.perusahaan} ditolak`);
+      } catch (err) {
+        showToast(err.message);
+      }
+    },
+    [showToast]
+  );
+
+  const advanceStage = useCallback(
+    async (id) => {
+      try {
+        const data = await apiFetch(`/api/collaborations/${id}/stage`, { method: "PATCH" });
+        setBerjalan((prev) =>
+          prev.map((p) =>
+            p.id === String(id) ? { ...p, tahap: data.collaboration.tahap, updated: data.collaboration.updated } : p
+          )
+        );
+        if (data.collaboration.tahap >= 4) {
+          loadAppData().catch(() => {});
+          refreshMe().catch(() => {});
+        }
+        showToast("Tahapan kolaborasi diperbarui");
+      } catch (err) {
+        showToast(err.message);
+      }
+    },
+    [loadAppData, refreshMe, showToast]
+  );
+
+  const authed = Boolean(user);
+  const role = user?.roleKey || "mahasiswa";
 
   const value = useMemo(
     () => ({
+      authLoading,
       authed,
       login,
+      register,
+      demoLogin,
       logout,
+      updateProfile,
       role,
-      setRole,
-      user: role === "mahasiswa" ? userMahasiswa : userIndustri,
+      user: user || EMPTY_USER,
       riset,
       addRiset,
+      trackRisetView,
       toggleLike,
       comments,
+      fetchComments,
       addComment,
       notifications,
       unreadCount,
       markAllRead,
       masuk,
       berjalan,
+      requestCollaboration,
       acceptMasuk,
       rejectMasuk,
       advanceStage,
       indPengajuan,
       indBerjalan,
+      refreshData: loadAppData,
       toast,
       showToast,
     }),
     [
+      authLoading,
       authed,
+      login,
+      register,
+      demoLogin,
+      logout,
+      updateProfile,
       role,
+      user,
       riset,
+      addRiset,
+      trackRisetView,
+      toggleLike,
       comments,
+      fetchComments,
+      addComment,
       notifications,
       unreadCount,
+      markAllRead,
       masuk,
       berjalan,
+      requestCollaboration,
+      acceptMasuk,
+      rejectMasuk,
+      advanceStage,
       indPengajuan,
       indBerjalan,
+      loadAppData,
       toast,
+      showToast,
     ]
   );
 

@@ -23,7 +23,8 @@ export default function Beranda() {
   const navigate = useNavigate();
 
   if (role === "industri") {
-    const terbaru = riset.filter((r) => r.status === "diterbitkan").slice(0, 8);
+    const published = riset.filter((r) => r.status === "diterbitkan" || r.status === "diadopsi");
+    const terbaru = published.slice(0, 8);
     return (
       <Container wide>
         <div className="fade-up relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-700 via-brand-600 to-brand-500 p-6 text-white sm:p-8">
@@ -45,7 +46,7 @@ export default function Beranda() {
         <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <StatCard label="Kebutuhan Aktif" value={user.stats.kebutuhan} onClick={() => navigate("/kolaborasi")} delay={0} />
           <StatCard label="Kolaborasi" value={user.stats.kolaborasi} onClick={() => navigate("/kolaborasi")} delay={40} />
-          <StatCard label="Total Riset" value={riset.filter(r => r.status === "diterbitkan").length} onClick={() => navigate("/riset")} delay={80} />
+          <StatCard label="Total Riset" value={published.length} onClick={() => navigate("/riset")} delay={80} />
           <StatCard label="Diadopsi" value={user.stats.diadopsi} delay={120} />
         </div>
 

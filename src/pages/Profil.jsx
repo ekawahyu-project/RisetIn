@@ -66,32 +66,22 @@ export default function Profil() {
     <Container wide>
       <PageHeader title="Profil" />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-1">
-          <div className="rounded-2xl bg-white dark:bg-[#101f2e] p-6 text-center shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-xl font-bold text-white shadow-lg shadow-brand-600/30">
-              {user.inisial}
-            </div>
-            <h1 className="mt-4 text-[16px] font-extrabold text-ink dark:text-white">{user.nama}</h1>
-            <span className="mt-1.5 inline-block rounded-full bg-brand-600/10 px-2.5 py-0.5 text-[11.5px] font-semibold text-brand-700 dark:bg-white/10 dark:text-brand-200">
-              {user.role}
-            </span>
-            <p className="mt-1.5 text-[12.5px] text-sub">{role === "mahasiswa" ? user.kampus : user.sektor}</p>
-            <p className="mx-auto mt-3 max-w-xs text-[12.5px] leading-relaxed text-sub">{user.bio}</p>
+      <div className="profil-row">
+        {/* Left card */}
+        <div className="profil-card-left rounded-2xl bg-white dark:bg-[#101f2e] p-6 text-center shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 flex flex-col justify-center">
+          <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-xl font-bold text-white shadow-lg shadow-brand-600/30">
+            {user.inisial}
           </div>
-
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            {Object.entries(user.stats).map(([k, v]) => (
-              <div key={k} className="rounded-2xl bg-white dark:bg-[#101f2e] p-4 text-center shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
-                <p className="text-[18px] font-extrabold text-ink dark:text-white">{v}</p>
-                <p className="text-[11px] capitalize text-sub">{k}</p>
-              </div>
-            ))}
-          </div>
+          <h1 className="mt-4 text-[16px] font-extrabold text-ink dark:text-white">{user.nama}</h1>
+          <span className="mt-1.5 inline-block rounded-full bg-brand-600/10 px-2.5 py-0.5 text-[11.5px] font-semibold text-brand-700 dark:bg-white/10 dark:text-brand-200">
+            {user.role}
+          </span>
+          <p className="mt-1.5 text-[12.5px] text-sub">{role === "mahasiswa" ? user.kampus : user.sektor}</p>
+          <p className="mx-auto mt-3 max-w-xs text-[12.5px] leading-relaxed text-sub">{user.bio}</p>
         </div>
 
-        <div className="lg:col-span-2">
-          <div className="rounded-2xl bg-white dark:bg-[#101f2e] p-3 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 sm:p-4">
+        {/* Right card */}
+        <div className="profil-card-right rounded-2xl bg-white dark:bg-[#101f2e] p-3 shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 sm:p-4">
             {items.map((it) => (
               <button
                 key={it.label}
@@ -121,7 +111,6 @@ export default function Profil() {
               <span className="flex-1 text-[13.5px] font-semibold text-red-500">Keluar</span>
               <ChevronRight size={16} className="text-red-300" />
             </button>
-          </div>
         </div>
       </div>
 

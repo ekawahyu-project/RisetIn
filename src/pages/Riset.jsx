@@ -31,7 +31,7 @@ export default function Riset() {
     if (urlQ) setQ(urlQ);
   }, [searchParams]);
 
-  const published = riset.filter((r) => r.status === "diterbitkan");
+  const published = riset.filter((r) => r.status === "diterbitkan" || r.status === "diadopsi");
   const kampusOptions = useMemo(() => [...new Set(published.map((r) => r.kampus))].sort(), [published]);
   const tahapOptions = useMemo(() => [...new Set(published.map((r) => r.tahap))].sort(), [published]);
   const lisensiOptions = useMemo(() => [...new Set(published.map((r) => r.lisensi).filter(Boolean))].sort(), [published]);
@@ -57,7 +57,8 @@ export default function Riset() {
     if (lisensi) data = data.filter((r) => r.lisensi === lisensi);
     if (minSuka) data = data.filter((r) => r.suka >= Number(minSuka));
     if (filter === "populer") data = [...data].sort((a, b) => b.suka - a.suka);
-    if (filter === "terbaru") data = [...data].sort((a, b) => (a.id < b.id ? 1 : -1));
+    if (filter === "terbaru")
+      data = [...data].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0) || Number(b.id) - Number(a.id));
     if (filter === "terdekat")
       data = data.filter((r) => r.kampus.includes("Brawijaya")).concat(data.filter((r) => !r.kampus.includes("Brawijaya")));
     return data;

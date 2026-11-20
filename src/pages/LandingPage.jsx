@@ -79,24 +79,58 @@ const categoryPills = [
 ];
 
 // Modal Login embedded in LandingPage
-function LoginModal({ mode: initialMode, onClose, onLogin }) {
+function LoginModal({ mode: initialMode, onClose, onLogin, onRegister, onDemoLogin }) {
   const [mode, setMode] = useState(initialMode || "login");
+  const [role, setRole] = useState("mahasiswa");
   const [nama, setNama] = useState("");
+  const [institusi, setInstitusi] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const isIndustri = /industri/i.test(email);
+  const isIndustriEmail = /industri/i.test(email);
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) return;
+    setError("");
+    if (!email.trim() || !password.trim()) {
+      setError("Email dan kata sandi wajib diisi.");
+      return;
+    }
+
     setLoading(true);
-    setTimeout(() => {
+    try {
+      if (mode === "login") {
+        await onLogin({ email: email.trim(), password });
+      } else {
+        await onRegister({
+          nama: nama.trim(),
+          email: email.trim(),
+          password,
+          role,
+          kampus: role === "mahasiswa" ? institusi.trim() : undefined,
+          sektor: role === "industri" ? institusi.trim() : undefined,
+        });
+      }
+    } catch (err) {
+      setError(err.message || "Gagal masuk ke aplikasi.");
+    } finally {
       setLoading(false);
-      onLogin({ email });
-    }, 650);
+    }
+  };
+
+  const quickDemo = async (targetRole) => {
+    setError("");
+    setLoading(true);
+    try {
+      await onDemoLogin(targetRole);
+    } catch (err) {
+      setError(err.message || "Gagal memulai sesi demo.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inputCls =
@@ -104,7 +138,7 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
 
   return (
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="modal-box relative w-full max-w-md rounded-3xl bg-white dark:bg-[#0a1928] ring-1 ring-black/8 dark:ring-white/10 shadow-2xl overflow-hidden">
+      <div className="modal-box relative max-h-[92vh] w-full max-w-md overflow-y-auto rounded-3xl bg-white dark:bg-[#0a1928] ring-1 ring-black/8 dark:ring-white/10 shadow-2xl">
         {/* Decorative glow */}
         <div className="pointer-events-none absolute -top-20 -right-20 h-48 w-48 rounded-full bg-cyan-500/10 dark:bg-cyan-500/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-10 -left-10 h-36 w-36 rounded-full bg-brand-600/10 dark:bg-brand-600/20 blur-3xl" />
@@ -129,7 +163,8 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
             {["login", "register"].map((m) => (
               <button
                 key={m}
-                onClick={() => setMode(m)}
+                type="button"
+                onClick={() => { setMode(m); setError(""); }}
                 className={`flex-1 rounded-lg py-2.5 text-[13px] font-semibold transition-all duration-200 ${
                   mode === m
                     ? "bg-gradient-to-r from-brand-600 to-brand-500 text-white shadow-md"
@@ -142,25 +177,70 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
           </div>
 
           <h2 className="text-[22px] font-extrabold text-ink dark:text-white tracking-tight leading-tight">
-            {mode === "login" ? "Selamat datang kembali 👋" : "Bergabung dengan RisetIn"}
+            {mode === "login" ? "Selamat datang kembali" : "Bergabung dengan RisetIn"}
           </h2>
           <p className="mt-1.5 text-[13px] text-sub dark:text-white/50">
             {mode === "login" ? "Masuk dan lanjutkan perjalanan riset Anda." : "Mulai jelajahi ekosistem riset & industri Indonesia."}
           </p>
 
+          {error && (
+            <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-[12.5px] font-medium text-red-700">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={submit} className="mt-6 space-y-4">
             {mode === "register" && (
-              <div className="fade-up">
-                <label className="mb-2 block text-[12px] font-semibold uppercase tracking-widest text-gray-500 dark:text-white/40">
-                  Nama Lengkap / Perusahaan
-                </label>
-                <input
-                  value={nama}
-                  onChange={(e) => setNama(e.target.value)}
-                  placeholder="Masukkan nama"
-                  className={inputCls}
-                />
-              </div>
+              <>
+                <div className="fade-up">
+                  <label className="mb-2 block text-[12px] font-semibold uppercase tracking-widest text-gray-500 dark:text-white/40">
+                    Daftar Sebagai
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { key: "mahasiswa", label: "Mahasiswa", Icon: FlaskConical },
+                      { key: "industri", label: "Industri", Icon: Building2 },
+                    ].map(({ key, label, Icon }) => (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => setRole(key)}
+                        className={`tap flex items-center justify-center gap-2 rounded-xl border py-2.5 text-[13px] font-semibold transition-all ${
+                          role === key
+                            ? "border-brand-500 bg-brand-50 text-brand-700"
+                            : "border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100"
+                        }`}
+                      >
+                        <Icon size={15} /> {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="fade-up">
+                  <label className="mb-2 block text-[12px] font-semibold uppercase tracking-widest text-gray-500 dark:text-white/40">
+                    {role === "industri" ? "Nama Perusahaan" : "Nama Lengkap"}
+                  </label>
+                  <input
+                    value={nama}
+                    onChange={(e) => setNama(e.target.value)}
+                    placeholder={role === "industri" ? "Contoh: PT Agro Makmur" : "Masukkan nama lengkap"}
+                    className={inputCls}
+                  />
+                </div>
+
+                <div className="fade-up">
+                  <label className="mb-2 block text-[12px] font-semibold uppercase tracking-widest text-gray-500 dark:text-white/40">
+                    {role === "industri" ? "Sektor Industri" : "Universitas / Institusi"}
+                  </label>
+                  <input
+                    value={institusi}
+                    onChange={(e) => setInstitusi(e.target.value)}
+                    placeholder={role === "industri" ? "Contoh: Pertanian & Agribisnis" : "Contoh: Universitas Brawijaya"}
+                    className={inputCls}
+                  />
+                </div>
+              </>
             )}
 
             <div>
@@ -185,7 +265,7 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
                   type={showPw ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Minimal 8 karakter"
+                  placeholder="Minimal 6 karakter"
                   className={`${inputCls} pr-12`}
                 />
                 <button
@@ -202,11 +282,11 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
               </div>
             </div>
 
-            {email && (
+            {mode === "login" && email && (
               <div className="fade-up flex items-center gap-2 rounded-xl bg-brand-50 dark:bg-brand-500/10 border border-brand-200 dark:border-brand-500/20 px-3.5 py-2.5 text-[12px] text-brand-700 dark:text-brand-300">
                 <Sparkles size={13} className="shrink-0" />
-                Terdeteksi masuk sebagai <b>{isIndustri ? "Industri" : "Mahasiswa"}</b>
-                {isIndustri ? <Building2 size={13} className="ml-auto shrink-0" /> : <FlaskConical size={13} className="ml-auto shrink-0" />}
+                Akan masuk sebagai <b>{isIndustriEmail ? "Industri" : "Mahasiswa"}</b>
+                {isIndustriEmail ? <Building2 size={13} className="ml-auto shrink-0" /> : <FlaskConical size={13} className="ml-auto shrink-0" />}
               </div>
             )}
 
@@ -219,16 +299,37 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
               ) : (
                 <>
-                  {mode === "login" ? "Masuk ke RisetIn" : "Buat Akun Gratis"}
+                  {mode === "login" ? "Masuk ke RisetIn" : "Buat Akun & Masuk"}
                   <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
                 </>
               )}
             </button>
           </form>
 
-          <p className="mt-5 text-center text-[11.5px] text-gray-400 dark:text-white/30">
-            Demo: email berisi <b className="text-gray-600 dark:text-white/50">"industri"</b> → akun Industri. Lainnya → Mahasiswa.
-          </p>
+          <div className="mt-5 border-t border-gray-100 pt-4">
+            <p className="mb-2.5 text-center text-[11.5px] font-semibold text-sub">Akses Cepat Demo (1 Klik)</p>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => quickDemo("mahasiswa")}
+                className="tap flex items-center justify-center gap-1.5 rounded-xl border border-brand-200 bg-sky-50 py-2.5 text-[12.5px] font-bold text-brand-700 transition-colors hover:bg-sky-100 disabled:opacity-60"
+              >
+                <FlaskConical size={14} /> Demo Mahasiswa
+              </button>
+              <button
+                type="button"
+                disabled={loading}
+                onClick={() => quickDemo("industri")}
+                className="tap flex items-center justify-center gap-1.5 rounded-xl border border-brand-200 bg-sky-50 py-2.5 text-[12.5px] font-bold text-brand-700 transition-colors hover:bg-sky-100 disabled:opacity-60"
+              >
+                <Building2 size={14} /> Demo Industri
+              </button>
+            </div>
+            <p className="mt-2.5 text-center text-[11px] text-gray-400">
+              Atau isi email apa saja: berisi <b>"industri"</b> → akun Industri, lainnya → Mahasiswa.
+            </p>
+          </div>
         </div>
       </div>
     </div>
@@ -236,7 +337,7 @@ function LoginModal({ mode: initialMode, onClose, onLogin }) {
 }
 
 export default function LandingPage() {
-  const { login } = useApp();
+  const { login, register, demoLogin } = useApp();
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState("login");
 
@@ -494,9 +595,17 @@ export default function LandingPage() {
         <LoginModal
           mode={modalMode}
           onClose={() => setShowModal(false)}
-          onLogin={(data) => {
+          onLogin={async (data) => {
+            await login(data);
             setShowModal(false);
-            login(data);
+          }}
+          onRegister={async (data) => {
+            await register(data);
+            setShowModal(false);
+          }}
+          onDemoLogin={async (targetRole) => {
+            await demoLogin(targetRole);
+            setShowModal(false);
           }}
         />
       )}

@@ -1,25 +1,70 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft, Phone, Send, Plus, Smile } from "lucide-react";
 import { useApp } from "../context/AppContext";
-import { chatSeed } from "../data/mockData";
+import { apiFetch } from "../lib/api";
 import Container from "../components/Container";
 
 export default function Chat() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { riset, berjalan, indBerjalan } = useApp();
+  const { riset, berjalan, indBerjalan, showToast } = useApp();
   const proyek = [...berjalan, ...indBerjalan].find((p) => p.id === id);
   const r = proyek ? riset.find((x) => x.id === proyek.risetId) : null;
   const lawan = proyek ? proyek.perusahaan || r?.kampus : "Mitra";
 
-  const [messages, setMessages] = useState(chatSeed);
+  const [messages, setMessages] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [sending, setSending] = useState(false);
   const [text, setText] = useState("");
+  const endRef = useRef(null);
 
-  const send = () => {
-    if (!text.trim()) return;
-    setMessages((m) => [...m, { id: "m" + Date.now(), from: "me", text, time: "09:4" + m.length }]);
+  useEffect(() => {
+    if (!proyek) return;
+    let active = true;
+
+    const loadMessages = async () => {
+      try {
+        const data = await apiFetch(`/api/collaborations/${id}/messages`);
+        if (active) setMessages(data.messages || []);
+      } catch (err) {
+        if (active && loading) showToast(err.message || "Gagal memuat percakapan");
+      } finally {
+        if (active) setLoading(false);
+      }
+    };
+
+    loadMessages();
+    // ponytail: 4s polling is fine for low-concurrency chat; upgrade to SSE/WebSocket when concurrent chats grow.
+    const timer = window.setInterval(loadMessages, 4000);
+    return () => {
+      active = false;
+      window.clearInterval(timer);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, Boolean(proyek)]);
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages.length]);
+
+  const send = async () => {
+    if (!text.trim() || sending) return;
+    const draft = text.trim();
     setText("");
+    setSending(true);
+    try {
+      const data = await apiFetch(`/api/collaborations/${id}/messages`, {
+        method: "POST",
+        body: { text: draft },
+      });
+      setMessages((m) => [...m, data.message]);
+    } catch (err) {
+      setText(draft);
+      showToast(err.message || "Gagal mengirim pesan");
+    } finally {
+      setSending(false);
+    }
   };
 
   if (!proyek) {
@@ -42,7 +87,7 @@ export default function Chat() {
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-[13.5px] font-bold text-ink dark:text-white">{lawan}</p>
-            <p className="text-[11px] text-leaf">Online</p>
+            <p className="text-[11px] text-leaf">Terhubung</p>
           </div>
           <button className="tap flex h-8 w-8 items-center justify-center rounded-full bg-sky-100 dark:bg-white/5 text-brand-700">
             <Phone size={15} />
@@ -51,20 +96,29 @@ export default function Chat() {
 
         <div className="no-scrollbar flex-1 space-y-3 overflow-y-auto bg-sky-50 dark:bg-white/5 p-5">
           <div className="flex justify-center">
-            <span className="rounded-full bg-white dark:bg-[#101f2e] px-3 py-1 text-[11px] text-sub shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">Hari ini</span>
+            <span className="rounded-full bg-white dark:bg-[#101f2e] px-3 py-1 text-[11px] text-sub shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5">
+              {r?.judul || "Ruang Diskusi Kolaborasi"}
+            </span>
           </div>
-          {messages.map((m) => (
-            <div key={m.id} className={`flex ${m.from === "me" ? "justify-end" : "justify-start"}`}>
-              <div
-                className={`max-w-[70%] rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 ${
-                  m.from === "me" ? "rounded-br-md bg-brand-600 text-white" : "rounded-bl-md bg-white dark:bg-[#101f2e] text-ink dark:text-white"
-                }`}
-              >
-                {m.text}
-                <div className={`mt-1 text-right text-[10px] ${m.from === "me" ? "text-white/70" : "text-brand-300"}`}>{m.time}</div>
+          {loading ? (
+            <p className="py-10 text-center text-[12.5px] text-sub">Memuat pesan...</p>
+          ) : messages.length === 0 ? (
+            <p className="py-10 text-center text-[12.5px] text-sub">Belum ada pesan. Mulai percakapan sekarang.</p>
+          ) : (
+            messages.map((m) => (
+              <div key={m.id} className={`flex ${m.from === "me" ? "justify-end" : "justify-start"}`}>
+                <div
+                  className={`max-w-[70%] rounded-2xl px-4 py-2.5 text-[13px] leading-relaxed shadow-card dark:shadow-none dark:ring-1 dark:ring-white/5 ${
+                    m.from === "me" ? "rounded-br-md bg-brand-600 text-white" : "rounded-bl-md bg-white dark:bg-[#101f2e] text-ink dark:text-white"
+                  }`}
+                >
+                  {m.text}
+                  <div className={`mt-1 text-right text-[10px] ${m.from === "me" ? "text-white/70" : "text-brand-300"}`}>{m.time}</div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
+          <div ref={endRef} />
         </div>
 
         <div className="flex shrink-0 items-center gap-2 border-t border-line dark:border-white/10 p-3">
@@ -81,7 +135,11 @@ export default function Chat() {
             />
             <Smile size={16} className="shrink-0 text-brand-300" />
           </div>
-          <button onClick={send} className="tap flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white">
+          <button
+            onClick={send}
+            disabled={sending || !text.trim()}
+            className="tap flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-600 text-white disabled:opacity-50"
+          >
             <Send size={15} />
           </button>
         </div>

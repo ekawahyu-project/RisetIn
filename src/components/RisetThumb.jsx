@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { resolveMediaUrl } from "../lib/api";
 
 const gradients = {
   pertanian: ["#1a7a52", "#34a06e"],
@@ -75,12 +76,14 @@ const icons = {
 export default function RisetThumb({ img, imgUrl, kategori, className = "" }) {
   const [imgError, setImgError] = useState(false);
 
+  const resolvedUrl = resolveMediaUrl(imgUrl);
+
   // If imgUrl provided and no error, render real image
-  if (imgUrl && !imgError) {
+  if (resolvedUrl && !imgError) {
     return (
       <div className={`relative overflow-hidden ${className}`} style={{ borderRadius: "inherit" }}>
         <img
-          src={imgUrl}
+          src={resolvedUrl}
           alt={kategori || "riset"}
           className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
           onError={() => setImgError(true)}

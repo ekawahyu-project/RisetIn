@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Send, MessageCircle } from "lucide-react";
 import { useApp } from "../context/AppContext";
@@ -9,8 +9,13 @@ import RisetThumb from "../components/RisetThumb";
 export default function Komentar() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { riset, comments, addComment, user } = useApp();
+  const { riset, comments, fetchComments, addComment, user, showToast } = useApp();
   const [text, setText] = useState("");
+  const [sending, setSending] = useState(false);
+
+  useEffect(() => {
+    if (id) fetchComments(id).catch(() => {});
+  }, [id, fetchComments]);
 
   const r = riset.find((x) => x.id === id);
   const list = comments[id] || [];
@@ -23,11 +28,18 @@ export default function Komentar() {
     );
   }
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
-    if (!text.trim()) return;
-    addComment(id, text.trim());
-    setText("");
+    if (!text.trim() || sending) return;
+    setSending(true);
+    try {
+      await addComment(id, text.trim());
+      setText("");
+    } catch (err) {
+      showToast(err.message || "Gagal mengirim komentar");
+    } finally {
+      setSending(false);
+    }
   };
 
   return (

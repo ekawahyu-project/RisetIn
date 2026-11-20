@@ -443,3 +443,23 @@ html.dark .riset-card:hover {
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum";
 }
+
+/* ============ PROFIL LAYOUT ============ */
+.profil-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+@media (min-width: 1024px) {
+  .profil-row {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .profil-card-left {
+    width: 33.333%;
+    flex-shrink: 0;
+  }
+  .profil-card-right {
+    flex: 1 1 0%;
+  }
+}

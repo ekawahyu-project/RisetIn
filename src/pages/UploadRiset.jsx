@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { UploadCloud, CheckCircle2, Sparkles, Trash2, Image, X } from "lucide-react";
+import { UploadCloud, CheckCircle2, Trash2, Image, X } from "lucide-react";
 import { useApp } from "../context/AppContext";
 import { categories } from "../data/mockData";
 import RisetThumb from "../components/RisetThumb";
@@ -11,22 +11,22 @@ const steps = ["Informasi", "Dokumen", "Publikasi"];
 
 export default function UploadRiset() {
   const navigate = useNavigate();
-  const { addRiset, showToast } = useApp();
+  const { addRiset, user, showToast } = useApp();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({
     judul: "",
-    institusi: "",
+    institusi: user.kampus || "",
     kategori: "",
     tahap: "",
     deskripsi: "",
+    manfaatText: "",
     lisensi: "CC BY-SA",
     fileName: "",
-    // Image upload fields
+    docFile: null,
     imgFile: null,
     imgPreviewUrl: null,
   });
-  const [checking, setChecking] = useState(false);
-  const [checked, setChecked] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [published, setPublished] = useState(false);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
@@ -34,6 +34,7 @@ export default function UploadRiset() {
   const handleImageUpload = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    if (form.imgPreviewUrl) URL.revokeObjectURL(form.imgPreviewUrl);
     const url = URL.createObjectURL(file);
     setForm((f) => ({ ...f, imgFile: file, imgPreviewUrl: url }));
   };
@@ -43,35 +44,40 @@ export default function UploadRiset() {
     setForm((f) => ({ ...f, imgFile: null, imgPreviewUrl: null }));
   };
 
-  const runCheck = () => {
-    setChecking(true);
-    setTimeout(() => {
-      setChecking(false);
-      setChecked(true);
-    }, 1400);
-  };
+  const manfaatList = form.manfaatText
+    .split(/\r?\n/)
+    .map((s) => s.trim())
+    .filter(Boolean);
 
-  const publish = () => {
-    const kategori = form.kategori || "teknologi";
-    addRiset({
-      id: "r" + Date.now(),
-      judul: form.judul || "Riset Tanpa Judul",
-      kampus: form.institusi || "Universitas Brawijaya",
-      kategori,
-      lisensi: form.lisensi,
-      views: 0,
-      komentar: 0,
-      suka: 0,
-      diadopsi: 0,
-      tahap: form.tahap || "Gagasan murni",
-      status: "diterbitkan",
-      img: "lms",
-      imgUrl: form.imgPreviewUrl || null,
-      ringkasan: form.deskripsi || "Belum ada deskripsi lengkap untuk riset ini.",
-      manfaat: ["Manfaat akan dilengkapi peneliti"],
-    });
-    setPublished(true);
-    showToast("Riset berhasil diterbitkan!");
+  const publish = async () => {
+    if (form.judul.trim().length < 3) {
+      showToast("Judul riset minimal 3 karakter");
+      setStep(1);
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const fd = new FormData();
+      fd.append("judul", form.judul.trim());
+      fd.append("kampus", (form.institusi || user.kampus || "Universitas Brawijaya").trim());
+      fd.append("kategori", form.kategori || "teknologi");
+      fd.append("tahap", form.tahap || "Gagasan murni");
+      fd.append("lisensi", form.lisensi || "CC BY-SA");
+      fd.append("ringkasan", form.deskripsi.trim() || "Belum ada deskripsi lengkap untuk riset ini.");
+      fd.append("status", "diterbitkan");
+      if (manfaatList.length > 0) {
+        fd.append("manfaat", JSON.stringify(manfaatList));
+      }
+      if (form.imgFile) fd.append("cover", form.imgFile);
+      if (form.docFile) fd.append("dokumen", form.docFile);
+
+      await addRiset(fd);
+      setPublished(true);
+    } catch (err) {
+      showToast(err.message || "Gagal menerbitkan riset");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (published) {
@@ -226,6 +232,16 @@ export default function UploadRiset() {
                 />
               </Field>
 
+              <Field label="Manfaat Utama (1 baris per poin)">
+                <textarea
+                  value={form.manfaatText}
+                  onChange={(e) => set("manfaatText", e.target.value)}
+                  placeholder={"Contoh:\nHemat biaya operasional hingga 30%\nMonitoring real-time dari smartphone"}
+                  rows={3}
+                  className="input resize-none"
+                />
+              </Field>
+
               <Field label="Lisensi">
                 <select value={form.lisensi} onChange={(e) => set("lisensi", e.target.value)} className="input sm:max-w-xs">
                   <option>CC BY-SA</option>
@@ -253,14 +269,18 @@ export default function UploadRiset() {
                 </div>
                 <input
                   type="file"
+                  accept=".pdf,.png,.jpg,.jpeg,.webp,.docx,.xlsx"
                   className="hidden"
-                  onChange={(e) => set("fileName", e.target.files?.[0]?.name || "dokumen-riset.pdf")}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) setForm((prev) => ({ ...prev, docFile: f, fileName: f.name }));
+                  }}
                 />
               </label>
               {form.fileName && (
                 <div className="flex items-center justify-between rounded-xl bg-sky-50 dark:bg-white/5 p-3.5">
                   <span className="truncate text-[13px] text-ink dark:text-white">{form.fileName}</span>
-                  <button onClick={() => set("fileName", "")} className="tap text-berry">
+                  <button onClick={() => setForm((prev) => ({ ...prev, docFile: null, fileName: "" }))} className="tap text-berry">
                     <Trash2 size={16} />
                   </button>
                 </div>
@@ -292,16 +312,18 @@ export default function UploadRiset() {
                 </div>
 
                 <p className="mt-3 text-[15px] font-bold text-ink dark:text-white">{form.judul || "Judul Riset Anda"}</p>
-                <p className="text-[12px] text-sub">Universitas Brawijaya</p>
+                <p className="text-[12px] text-sub">{form.institusi || user.kampus || "Universitas Brawijaya"}</p>
                 <p className="mt-2 w-fit rounded-full bg-white dark:bg-[#101f2e] px-2.5 py-0.5 text-[11.5px] font-semibold text-brand-600 ring-1 ring-line dark:ring-white/10">
                   Lisensi: {form.lisensi}
                 </p>
                 <p className="mt-3 text-[13px] leading-relaxed text-ink/80 dark:text-white/75">
-                  {form.deskripsi || "Sistem irigasi otomatis yang dapat memonitor kelembapan tanah dan cuaca secara real-time menggunakan sensor IoT untuk efisiensi penggunaan air."}
+                  {form.deskripsi || "Belum ada deskripsi lengkap untuk riset ini."}
                 </p>
                 <p className="mt-3 text-[13px] font-bold text-ink dark:text-white">Manfaat</p>
                 <ul className="mt-1 list-disc pl-4 text-[13px] text-ink/80 dark:text-white/75">
-                  <li>Meningkatkan hasil panen</li>
+                  {(manfaatList.length > 0 ? manfaatList : ["Manfaat riset akan dilengkapi oleh tim peneliti"]).map((m, i) => (
+                    <li key={i}>{m}</li>
+                  ))}
                 </ul>
               </div>
             </div>
@@ -327,9 +349,10 @@ export default function UploadRiset() {
             ) : (
               <button
                 onClick={publish}
-                className="tap rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 px-6 py-3 text-[13px] font-bold text-white shadow-lg shadow-brand-600/30 hover:shadow-brand-600/50 transition-all hover:-translate-y-0.5"
+                disabled={submitting}
+                className="tap rounded-xl bg-gradient-to-r from-brand-600 to-brand-500 px-6 py-3 text-[13px] font-bold text-white shadow-lg shadow-brand-600/30 hover:shadow-brand-600/50 transition-all hover:-translate-y-0.5 disabled:opacity-60"
               >
-                Terbitkan Riset
+                {submitting ? "Menerbitkan..." : "Terbitkan Riset"}
               </button>
             )}
           </div>
@@ -344,15 +367,6 @@ function Field({ label, children }) {
     <div>
       <label className="mb-1.5 block text-[13px] font-semibold text-ink dark:text-white">{label}</label>
       {children}
-    </div>
-  );
-}
-
-function CheckRow({ label }) {
-  return (
-    <div className="flex items-center gap-2 text-[13px] text-ink dark:text-white">
-      <CheckCircle2 size={16} className="text-leaf" />
-      {label}
     </div>
   );
 }

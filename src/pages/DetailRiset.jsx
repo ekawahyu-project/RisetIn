@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Share2, Eye, MessageCircle, Heart, FileText, Users, Building2, HandHeart, Download, ArrowRight } from "lucide-react";
 import { useApp } from "../context/AppContext";
+import { resolveMediaUrl } from "../lib/api";
 import RisetThumb from "../components/RisetThumb";
 import { CategoryBadge } from "../components/Badge";
 import PageHeader from "../components/PageHeader";
@@ -12,9 +13,30 @@ const tabs = ["Ringkasan", "Dokumen", "Anggota", "Komentar"];
 export default function DetailRiset() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { riset, role, showToast, toggleLike, comments } = useApp();
+  const {
+    riset,
+    role,
+    showToast,
+    toggleLike,
+    comments,
+    fetchComments,
+    trackRisetView,
+    requestCollaboration,
+    indPengajuan,
+    indBerjalan,
+  } = useApp();
   const [tab, setTab] = useState("Ringkasan");
-  const [requested, setRequested] = useState(false);
+  const [submittingCollab, setSubmittingCollab] = useState(false);
+  const trackedRef = useRef(null);
+
+  useEffect(() => {
+    if (!id) return;
+    fetchComments(id).catch(() => {});
+    if (trackedRef.current !== id) {
+      trackedRef.current = id;
+      trackRisetView(id);
+    }
+  }, [id, fetchComments, trackRisetView]);
 
   const r = riset.find((x) => x.id === id);
   if (!r) {
@@ -31,6 +53,26 @@ export default function DetailRiset() {
   }
 
   const commentList = comments[r.id] || [];
+  const alreadyActive = indBerjalan.some((p) => p.risetId === r.id);
+  const alreadyPending = indPengajuan.some((p) => p.risetId === r.id && p.status === "menunggu");
+  const collabDisabled = alreadyActive || alreadyPending || submittingCollab;
+
+  const handleRequestCollab = async () => {
+    setSubmittingCollab(true);
+    try {
+      await requestCollaboration(r.id);
+    } catch (err) {
+      showToast(err.message || "Gagal mengajukan kolaborasi");
+    } finally {
+      setSubmittingCollab(false);
+    }
+  };
+
+  const dokumenList = Array.isArray(r.dokumen) && r.dokumen.length > 0 ? r.dokumen : [];
+  const anggotaList =
+    Array.isArray(r.anggota) && r.anggota.length > 0
+      ? r.anggota
+      : [{ nama: `Tim Riset ${r.kampus}`, role: "Ketua Peneliti" }];
 
   return (
     <Container wide>
@@ -126,33 +168,52 @@ export default function DetailRiset() {
 
               {tab === "Dokumen" && (
                 <div className="fade-up grid gap-2.5 sm:grid-cols-2">
-                  {["Proposal Riset.pdf", "Dokumentasi Purwarupa.pdf", "Data Uji Coba.xlsx"].map((d, i) => (
-                    <div key={i} className="flex items-center gap-3 rounded-xl bg-sky-50 p-3.5 dark:bg-white/5">
-                      <FileText size={18} className="shrink-0 text-brand-500" />
-                      <span className="flex-1 truncate text-[13px] text-ink dark:text-white/85">{d}</span>
-                      <Download size={15} className="shrink-0 text-brand-400" />
-                    </div>
-                  ))}
+                  {dokumenList.length === 0 ? (
+                    <p className="col-span-full py-6 text-center text-[13px] text-sub">Belum ada dokumen terlampir.</p>
+                  ) : (
+                    dokumenList.map((d, i) => {
+                      const name = typeof d === "string" ? d : d.name;
+                      const url = typeof d === "string" ? null : resolveMediaUrl(d.url);
+                      return url ? (
+                        <a
+                          key={i}
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="tap flex items-center gap-3 rounded-xl bg-sky-50 p-3.5 hover:bg-sky-100 dark:bg-white/5"
+                        >
+                          <FileText size={18} className="shrink-0 text-brand-500" />
+                          <span className="flex-1 truncate text-[13px] text-ink dark:text-white/85">{name}</span>
+                          <Download size={15} className="shrink-0 text-brand-500" />
+                        </a>
+                      ) : (
+                        <div key={i} className="flex items-center gap-3 rounded-xl bg-sky-50 p-3.5 dark:bg-white/5">
+                          <FileText size={18} className="shrink-0 text-brand-500" />
+                          <span className="flex-1 truncate text-[13px] text-ink dark:text-white/85">{name}</span>
+                          <Download size={15} className="shrink-0 text-brand-300" />
+                        </div>
+                      );
+                    })
+                  )}
                 </div>
               )}
 
               {tab === "Anggota" && (
                 <div className="fade-up grid gap-2.5 sm:grid-cols-2">
-                  {[
-                    { n: "Eka Wahyu Maulidan", role: "Ketua Peneliti" },
-                    { n: "Aisyah Berlianti Afriandi", role: "Anggota Peneliti" },
-                    { n: "Rezha Anugrah Putra", role: "Anggota Peneliti" },
-                  ].map((m, i) => (
-                    <div key={i} className="flex items-center gap-3 rounded-xl bg-sky-50 p-3.5 dark:bg-white/5">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-600 text-[12px] font-bold text-white">
-                        {m.n.split(" ").map((w) => w[0]).slice(0, 2).join("")}
+                  {anggotaList.map((m, i) => {
+                    const memberName = m.nama || m.n || "Peneliti";
+                    return (
+                      <div key={i} className="flex items-center gap-3 rounded-xl bg-sky-50 p-3.5 dark:bg-white/5">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-600 text-[12px] font-bold text-white">
+                          {memberName.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase()}
+                        </div>
+                        <div>
+                          <p className="text-[13px] font-semibold text-ink dark:text-white">{memberName}</p>
+                          <p className="text-[11.5px] text-sub">{m.role || "Anggota Peneliti"}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="text-[13px] font-semibold text-ink dark:text-white">{m.n}</p>
-                        <p className="text-[11.5px] text-sub">{m.role}</p>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
 
@@ -199,17 +260,20 @@ export default function DetailRiset() {
                 Ajukan kolaborasi untuk mendiskusikan implementasi riset ini bersama tim peneliti.
               </p>
               <button
-                disabled={requested}
-                onClick={() => {
-                  setRequested(true);
-                  showToast("Pengajuan kolaborasi terkirim");
-                }}
+                disabled={collabDisabled}
+                onClick={handleRequestCollab}
                 className={`tap mt-4 flex w-full items-center justify-center gap-2 rounded-xl py-3 text-[13px] font-bold text-white ${
-                  requested ? "bg-brand-300" : "bg-brand-600 hover:bg-brand-700"
+                  collabDisabled ? "bg-brand-300" : "bg-brand-600 hover:bg-brand-700"
                 }`}
               >
                 <HandHeart size={16} />
-                {requested ? "Pengajuan Terkirim" : "Ajukan Kolaborasi"}
+                {alreadyActive
+                  ? "Kolaborasi Aktif"
+                  : alreadyPending
+                  ? "Pengajuan Terkirim"
+                  : submittingCollab
+                  ? "Mengirim..."
+                  : "Ajukan Kolaborasi"}
               </button>
             </div>
           )}
@@ -218,7 +282,7 @@ export default function DetailRiset() {
             <p className="text-[13.5px] font-bold text-ink dark:text-white">Riset Terkait</p>
             <div className="mt-3 space-y-2.5">
               {riset
-                .filter((x) => x.kategori === r.kategori && x.id !== r.id && x.status === "diterbitkan")
+                .filter((x) => x.kategori === r.kategori && x.id !== r.id && (x.status === "diterbitkan" || x.status === "diadopsi"))
                 .slice(0, 3)
                 .map((x) => (
                   <button

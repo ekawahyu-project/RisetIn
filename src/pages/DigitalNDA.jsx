@@ -5,8 +5,8 @@ import {
   User, Briefcase, Pen, RotateCcw, AlertCircle,
 } from "lucide-react";
 import { useApp } from "../context/AppContext";
+import { apiFetch } from "../lib/api";
 import Container from "../components/Container";
-import PageHeader from "../components/PageHeader";
 
 const ndaPoints = [
   "Informasi, dokumen, dan data dalam proposal riset bersifat rahasia.",
@@ -106,34 +106,120 @@ function SignatureCanvas({ onSign }) {
 export default function DigitalNDA() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { role } = useApp();
+  const { role, showToast } = useApp();
   const isMahasiswa = role === "mahasiswa";
 
-  const [step, setStep] = useState(isMahasiswa ? 3 : 1);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [savedNda, setSavedNda] = useState(null);
+  const [step, setStep] = useState(1);
   const [agreed, setAgreed] = useState(false);
   const [signature, setSignature] = useState(null);
   const [nama, setNama] = useState("");
   const [jabatan, setJabatan] = useState("");
   const [copied, setCopied] = useState(false);
 
-  const today = new Date();
-  const nomorNDA = `NDA-${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}-001`;
-  const tanggal =
-    today.toLocaleString("id-ID", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }) + " WIB";
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const data = await apiFetch(`/api/collaborations/${id}/nda`);
+        if (!active) return;
+        if (data?.nda) {
+          setSavedNda(data.nda);
+          setStep(3);
+        } else {
+          setStep(1);
+        }
+      } catch (err) {
+        if (active) showToast(err.message || "Gagal memuat data NDA");
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [id, showToast]);
+
+  const displayNomor = savedNda?.nomorNDA || `NDA-${id}`;
+  const displayTanggal = savedNda?.signedAt
+    ? new Date(savedNda.signedAt).toLocaleString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }) + " WIB"
+    : "-";
 
   const copyNomor = () => {
-    navigator.clipboard.writeText(nomorNDA).catch(() => {});
+    navigator.clipboard.writeText(displayNomor).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const canConfirm = signature && nama.trim() && jabatan.trim();
+  const canConfirm = Boolean(signature && nama.trim() && jabatan.trim()) && !saving;
+
+  const submitNda = async () => {
+    if (!canConfirm) return;
+    setSaving(true);
+    try {
+      const data = await apiFetch(`/api/collaborations/${id}/nda`, {
+        method: "POST",
+        body: { nama: nama.trim(), jabatan: jabatan.trim(), signature },
+      });
+      setSavedNda(data.nda);
+      setStep(3);
+      showToast("Digital NDA berhasil disimpan");
+    } catch (err) {
+      showToast(err.message || "Gagal menyimpan NDA");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Container wide>
+        <div className="py-20 text-center text-[13px] text-sub">Memuat dokumen NDA...</div>
+      </Container>
+    );
+  }
+
+  if (isMahasiswa && !savedNda) {
+    return (
+      <Container wide>
+        <div className="mb-6 flex items-center gap-3">
+          <button
+            onClick={() => navigate(-1)}
+            className="tap flex h-9 w-9 items-center justify-center rounded-full text-ink hover:bg-sky-100"
+          >
+            <ChevronLeft size={20} />
+          </button>
+          <div>
+            <h1 className="text-[18px] font-extrabold text-ink">Digital NDA</h1>
+            <p className="text-[12px] text-sub">Menunggu Tanda Tangan Mitra Industri</p>
+          </div>
+        </div>
+        <div className="rounded-2xl bg-white p-8 text-center shadow-card">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-100 text-brand-600">
+            <Shield size={24} />
+          </div>
+          <p className="text-[15px] font-bold text-ink">NDA Belum Ditandatangani</p>
+          <p className="mx-auto mt-1.5 max-w-sm text-[13px] text-sub">
+            Mitra industri belum menandatangani perjanjian kerahasiaan (NDA) untuk kolaborasi ini. Setelah ditandatangani, dokumen resmi akan tampil di sini.
+          </p>
+          <button
+            onClick={() => navigate("/kolaborasi")}
+            className="tap mt-6 rounded-xl bg-brand-600 px-6 py-3 text-[13px] font-bold text-white"
+          >
+            Kembali ke Kolaborasi
+          </button>
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <Container wide>
@@ -273,10 +359,10 @@ export default function DigitalNDA() {
 
               <button
                 disabled={!canConfirm}
-                onClick={() => setStep(3)}
+                onClick={submitNda}
                 className="tap w-full rounded-xl bg-brand-600 py-3.5 text-[14px] font-bold text-white shadow-soft transition-all hover:bg-brand-700 disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                Konfirmasi &amp; Tandatangani NDA
+                {saving ? "Menyimpan..." : "Konfirmasi & Tandatangani NDA"}
               </button>
             </div>
           </div>
@@ -301,7 +387,7 @@ export default function DigitalNDA() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[10.5px] font-semibold uppercase tracking-widest text-sub">Nomor Perjanjian</p>
-                    <p className="mt-0.5 font-mono text-[13.5px] font-bold text-ink dark:text-white">{nomorNDA}</p>
+                    <p className="mt-0.5 font-mono text-[13.5px] font-bold text-ink dark:text-white">{displayNomor}</p>
                   </div>
                   <button
                     onClick={copyNomor}
@@ -316,7 +402,7 @@ export default function DigitalNDA() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-[10.5px] font-semibold uppercase tracking-widest text-sub">Tanggal Ditandatangani</p>
-                    <p className="mt-0.5 text-[13px] font-semibold text-ink dark:text-white">{tanggal}</p>
+                    <p className="mt-0.5 text-[13px] font-semibold text-ink dark:text-white">{displayTanggal}</p>
                   </div>
                   <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-white dark:bg-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/10">
                     <Calendar size={14} className="text-brand-600 dark:text-brand-300" />
@@ -328,13 +414,9 @@ export default function DigitalNDA() {
               <div className="space-y-3">
                 <div>
                   <p className="mb-2 text-[10.5px] font-semibold uppercase tracking-widest text-sub">Tanda Tangan</p>
-                  {isMahasiswa ? (
-                    <div className="rounded-xl border border-line dark:border-white/10 bg-white dark:bg-white/5 p-3 flex items-center justify-center min-h-[5rem]">
-                      <span className="font-['Caveat',cursive] text-3xl font-bold text-blue-900 rotate-[-5deg]">PT Agro Makmur</span>
-                    </div>
-                  ) : signature ? (
+                  {savedNda?.signature ? (
                     <div className="rounded-xl border border-line dark:border-white/10 bg-white dark:bg-white/5 p-3">
-                      <img src={signature} alt="Tanda tangan" className="h-16 w-full object-contain" />
+                      <img src={savedNda.signature} alt="Tanda tangan" className="h-16 w-full object-contain" />
                     </div>
                   ) : (
                     <div className="rounded-xl border border-dashed border-line dark:border-white/10 bg-white/50 dark:bg-white/5 p-3 min-h-[5rem]" />
@@ -346,14 +428,14 @@ export default function DigitalNDA() {
                     <p className="text-[10.5px] font-semibold uppercase tracking-widest text-sub">Nama Lengkap</p>
                     <div className="mt-1.5 flex items-center gap-2">
                       <User size={14} className="shrink-0 text-brand-400" />
-                      <p className="text-[13.5px] font-semibold text-ink dark:text-white">{isMahasiswa ? "Direktur PT Agro Makmur" : nama}</p>
+                      <p className="text-[13.5px] font-semibold text-ink dark:text-white">{savedNda?.nama || nama}</p>
                     </div>
                   </div>
                   <div>
                     <p className="text-[10.5px] font-semibold uppercase tracking-widest text-sub">Jabatan</p>
                     <div className="mt-1.5 flex items-center gap-2">
                       <Briefcase size={14} className="shrink-0 text-brand-400" />
-                      <p className="text-[13.5px] font-semibold text-ink dark:text-white">{isMahasiswa ? "CEO & Founder" : jabatan}</p>
+                      <p className="text-[13.5px] font-semibold text-ink dark:text-white">{savedNda?.jabatan || jabatan}</p>
                     </div>
                   </div>
                 </div>

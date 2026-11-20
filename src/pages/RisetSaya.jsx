@@ -4,7 +4,6 @@ import PageHeader from "../components/PageHeader";
 import Container from "../components/Container";
 import { RisetCardGrid } from "../components/RisetCard";
 import { useApp } from "../context/AppContext";
-import { risetSayaIds, statusRisetSaya } from "../data/mockData";
 
 const tabs = [
   { key: "diterbitkan", label: "Diterbitkan" },
@@ -17,8 +16,8 @@ export default function RisetSaya() {
   const { riset } = useApp();
   const [tab, setTab] = useState("diterbitkan");
 
-  const mine = riset.filter((r) => risetSayaIds.includes(r.id));
-  const filtered = mine.filter((r) => (statusRisetSaya[r.id] || "diterbitkan") === tab);
+  const mine = riset.filter((r) => r.isMine);
+  const filtered = mine.filter((r) => r.status === tab);
 
   return (
     <Container wide>
