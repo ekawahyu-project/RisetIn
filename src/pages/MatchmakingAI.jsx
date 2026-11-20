@@ -77,7 +77,7 @@ export default function MatchmakingAI() {
     <Container wide>
       <PageHeader
         title="Matchmaking AI"
-        subtitle="Didukung Gemini AI — ceritakan kebutuhan bisnis Anda untuk menemukan riset kampus paling relevan"
+        subtitle="Ceritakan kebutuhan bisnis Anda untuk menemukan riset kampus paling relevan"
         actions={
           messages.length > 0 && (
             <button
@@ -102,7 +102,7 @@ export default function MatchmakingAI() {
                   Temukan kecocokan riset dengan kebutuhan industri
                 </p>
                 <p className="mx-auto mt-1.5 max-w-md text-[12.5px] text-sub">
-                  Gemini AI akan menganalisis kebutuhan Anda terhadap seluruh katalog riset di database RisetIn.
+                  AI akan menganalisis kebutuhan Anda terhadap seluruh katalog riset di database RisetIn.
                 </p>
               </div>
               <div className="mt-2 grid w-full max-w-2xl gap-2 sm:grid-cols-3">
@@ -188,7 +188,7 @@ export default function MatchmakingAI() {
                   <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-brand-400 [animation-delay:-0.2s]" />
                   <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-brand-400 [animation-delay:-0.1s]" />
                   <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-brand-400" />
-                  <span className="ml-1">Gemini AI sedang mencocokkan riset...</span>
+                  <span className="ml-1">AI sedang mencocokkan riset...</span>
                 </div>
               )}
               <div ref={bottomRef} />
